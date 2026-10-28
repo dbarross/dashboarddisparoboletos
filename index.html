@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprovatt • Central Analítica dos Envio de Boletos</title>
+    <title>Aprovatt • Central Analítica de Automações & Régua de Cobrança</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -160,7 +160,7 @@
                         <span>Limpar Filtros</span>
                     </button>
                     <span id="filtered-records-badge" class="text-xs px-2.5 py-1.5 rounded-lg bg-emerald-950/50 text-emerald-300 font-semibold border border-emerald-500/30">
-                        176 / 176 registros
+                        0 / 0 registros
                     </span>
                 </div>
             </div>
@@ -168,14 +168,14 @@
             <!-- Grid de Filtros (7 Dimensões) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
                 
-                <!-- 1. Filtro: Momento da Régua (NOVO) -->
+                <!-- 1. Filtro: Momento da Régua -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="timer" class="w-3.5 h-3.5 text-rose-400"></i> Régua / Gatilho
                     </label>
-                    <select id="filter-regua" onchange="handleReguaOrBaseChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
+                    <select id="filter-regua" onchange="applyAllFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
                         <option value="ALL">Todas as Réguas</option>
-                        <option value="2 dias antes" selected>2 dias antes do vencimento</option>
+                        <option value="2 dias antes">2 dias antes do vencimento</option>
                         <option value="No dia">No dia do vencimento</option>
                         <option value="5 dias depois">5 dias após o vencimento</option>
                     </select>
@@ -186,9 +186,9 @@
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="database" class="w-3.5 h-3.5 text-emerald-400"></i> Base / Carteira
                     </label>
-                    <select id="filter-base" onchange="handleReguaOrBaseChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
+                    <select id="filter-base" onchange="applyAllFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
                         <option value="ALL">Todas as Bases</option>
-                        <option value="ServCar" selected>ServCar (Passeio/Frota)</option>
+                        <option value="ServCar">ServCar (Passeio/Frota)</option>
                         <option value="ServTaxi">ServTaxi (Táxis/Vans)</option>
                     </select>
                 </div>
@@ -282,7 +282,7 @@
             </div>
         </section>
 
-        <!-- CABEÇALHO EXCLUSIVO DO RELATÓRIO PDF (APENAS EM IMPRESSÃO/PDF) -->
+        <!-- CABEÇALHO EXCLUSIVO DO RELATÓRIO PDF -->
         <div id="pdf-header-print" class="hidden p-6 bg-slate-900 border border-slate-700 rounded-2xl text-white mb-4">
             <div class="flex justify-between items-start">
                 <div>
@@ -352,8 +352,8 @@
                     <span class="text-[10px] font-bold uppercase tracking-wider">Região Predominante</span>
                     <i data-lucide="map" class="w-3.5 h-3.5 text-emerald-400"></i>
                 </div>
-                <div class="text-lg font-extrabold text-white font-mono" id="kpi-top-ddd">DDD 75</div>
-                <div class="text-[10px] text-slate-400 mt-1" id="kpi-top-ddd-pct">Bahia Interior</div>
+                <div class="text-lg font-extrabold text-white font-mono" id="kpi-top-ddd">DDD -</div>
+                <div class="text-[10px] text-slate-400 mt-1" id="kpi-top-ddd-pct">Bahia</div>
             </div>
 
         </section>
@@ -465,17 +465,17 @@
                         </tr>
                     </thead>
                     <tbody id="table-body" class="divide-y divide-slate-800/60 font-sans">
-                        <!-- Dynamic content -->
+                        <!-- Conteúdo preenchido dinamicamente -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Paginação -->
             <div class="flex flex-col sm:flex-row justify-between items-center mt-4 gap-3 text-xs text-slate-400 no-print">
-                <div id="table-pagination-info">Mostrando 1 a 10 de 176 registros</div>
+                <div id="table-pagination-info">Mostrando 0 a 0 de 0 registros</div>
                 <div class="flex items-center space-x-2">
                     <button onclick="navigatePage(-1)" id="btn-prev" class="px-3 py-1.5 bg-slate-850 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-slate-700 text-white transition">Anterior</button>
-                    <span id="page-indicator" class="px-3 py-1.5 bg-slate-900 rounded-lg text-emerald-400 font-mono font-semibold border border-slate-800">1 / 18</span>
+                    <span id="page-indicator" class="px-3 py-1.5 bg-slate-900 rounded-lg text-emerald-400 font-mono font-semibold border border-slate-800">1 / 1</span>
                     <button onclick="navigatePage(1)" id="btn-next" class="px-3 py-1.5 bg-slate-850 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-slate-700 text-white transition">Próximo</button>
                 </div>
             </div>
@@ -491,473 +491,418 @@
         </div>
     </footer>
 
-    <!-- LOGICA JS COMPLETA -->
+    <!-- LÓGICA JS INTEGRADA COM GOOGLE SHEETS E PRESERVAÇÃO DE FILTROS -->
     <script>
         const SHEET_ID = '1gHSotrzUANYZRGh22fvmydZ9wZ28fSvVHEQHskd85t4';
 
-        // Dataset Base
-        let masterData = [{"Data e hora": "18/07/26 09:43:17", "Telefone": 5575981727763, "Nome": "JOAO BATISTA JESUS DE SOUZA", "Número do boleto": 3229589, "Valor": 155.99, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 09:50:29", "Telefone": 5575988682313, "Nome": "LUCAS LIMA DANTAS", "Número do boleto": 3234368, "Valor": 107.01, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:03:17", "Telefone": 5575981985944, "Nome": "ANDRE ROBERTO DE OLIVEIRA CARVALHO", "Número do boleto": 3218762, "Valor": 132.12, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:19:28", "Telefone": 5575999387554, "Nome": "RODRIGO DE SOUSA BRANDAO OLIVEIRA", "Número do boleto": 3240416, "Valor": 131.81, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:26:47", "Telefone": 5571999004957, "Nome": "JOSE ALVES DE BARROS NETO", "Número do boleto": 3249532, "Valor": 125.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:27:22", "Telefone": 5575983417309, "Nome": "AMANDA DA SILVA XAVIER", "Número do boleto": 3218249, "Valor": 176.22, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 10:29:39", "Telefone": 5575999954818, "Nome": "JARDIEL CORREIA SANTOS", "Número do boleto": 3229148, "Valor": 145.31, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:34:37", "Telefone": 5575999960420, "Nome": "ALEXANDRE LIMA VIANA", "Número do boleto": 3244674, "Valor": 42.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 10:45:16", "Telefone": 5571996514230, "Nome": "ANA LUCIA SANTOS DE OLIVEIRA", "Número do boleto": 3250695, "Valor": 119.52, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:46:26", "Telefone": 5571986701498, "Nome": "ADILSON NASCIMENTO GALLO", "Número do boleto": 3254128, "Valor": 147.02, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:46:27", "Telefone": 5571996045956, "Nome": "VERONICA DOS SANTOS DE ARAUJO", "Número do boleto": 3250373, "Valor": 71.91, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 10:47:10", "Telefone": 5571991335905, "Nome": "EVANDRO BISPO DE SINO", "Número do boleto": 3254815, "Valor": 262.62, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 10:53:36", "Telefone": 5575991123758, "Nome": "RAILDA NERE DE ALMEIDA", "Número do boleto": 3253908, "Valor": 218.52, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 10:53:51", "Telefone": 5571982639239, "Nome": "ALMIRAILTON MAGALHAES DA SILVA", "Número do boleto": 3254138, "Valor": 80.82, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 10:57:10", "Telefone": 5575992553832, "Nome": "MARINEIDE AUGUSTA DOS SANTOS SILVA", "Número do boleto": 3251212, "Valor": 179.73, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:06:19", "Telefone": 5571999620617, "Nome": "ANTONIO DA PAIXAO SANTIAGO", "Número do boleto": 3219185, "Valor": 138.11, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 11:08:26", "Telefone": 5575987010646, "Nome": "FERNANDO JOSE FEIJO DE SOUZA", "Número do boleto": 3254856, "Valor": 159.12, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 11:10:46", "Telefone": 5575983491985, "Nome": "DIMAS ALMEIDA DE ANDRADE", "Número do boleto": 3254689, "Valor": 162.4, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:11:23", "Telefone": 5575998956262, "Nome": "YAGO NESTOR MARINHO MENEZES", "Número do boleto": 3255783, "Valor": 114.1, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 11:11:45", "Telefone": 5571999225574, "Nome": "RAFAEL BEZERRA MIRO DE SOUZA", "Número do boleto": 3238733, "Valor": 227.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:12:15", "Telefone": 5573981383083, "Nome": "OANDERSON RODRIGUES DE OLIVEIRA", "Número do boleto": 3255476, "Valor": 322.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 11:22:23", "Telefone": 5575999234888, "Nome": "LAUDICEA CANDIDO DA SILVA", "Número do boleto": 3255259, "Valor": 172.31, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:25:04", "Telefone": 5571996779098, "Nome": "JOSE ROCHA CALDAS", "Número do boleto": 3255201, "Valor": 266.29, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 11:28:29", "Telefone": 5575988599513, "Nome": "JOSE DE SOUZA MATOS FILHO", "Número do boleto": 3255166, "Valor": 170.81, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:29:01", "Telefone": 5573991927127, "Nome": "LUIZ MORAIS DA SILVA", "Número do boleto": 3254286, "Valor": 67.92, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 11:29:31", "Telefone": 5577999302515, "Nome": "LEANDRO SANTANA OLIVEIRA", "Número do boleto": 3255265, "Valor": 231.12, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "77", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:35:55", "Telefone": 5575981040052, "Nome": "RENILDA ALVES PINTO DOS SANTOS", "Número do boleto": 3253177, "Valor": 150.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 11:36:29", "Telefone": 5571982594463, "Nome": "GLEDSON LEAL SANTIAGO", "Número do boleto": 3254946, "Valor": 158.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 11:39:10", "Telefone": 5575991258129, "Nome": "MAURICIO DA SILVA FERREIRA", "Número do boleto": 3256382, "Valor": 84.6, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 11:56:54", "Telefone": 5573998648293, "Nome": "JADSON PACHECO LOPES", "Número do boleto": 3255914, "Valor": 186.12, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 11:57:11", "Telefone": 5571993059184, "Nome": "RONILSON TORRES DE JESUS", "Número do boleto": 3256034, "Valor": 372.64, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 11:58:56", "Telefone": 5571982656603, "Nome": "LEONARDO DE ANDRADE SILVA", "Número do boleto": 3255274, "Valor": 174.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 12:00:45", "Telefone": 5575982790930, "Nome": "ROQUE DE JESUS SILVA", "Número do boleto": 3255884, "Valor": 60.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 12:01:06", "Telefone": 5571996046065, "Nome": "MANOEL EDVALDO DA SILVA SANTOS", "Número do boleto": 3255348, "Valor": 285.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 12:06:30", "Telefone": 5575992504752, "Nome": "RAFAEL EIRADO SENA GALVAO", "Número do boleto": 3255535, "Valor": 169.02, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 12:11:04", "Telefone": 5571997248505, "Nome": "LEILIANE DOS SANTOS COSTA", "Número do boleto": 3255973, "Valor": 113.31, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 12:14:21", "Telefone": 5571996050440, "Nome": "ANTONIO MARCOS DOS SANTOS SILVEIRA", "Número do boleto": 3253148, "Valor": 103.5, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 12:16:26", "Telefone": 5571984313367, "Nome": "GILDO XAVIER DA SILVA JUNIOR", "Número do boleto": 3226808, "Valor": 86.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 12:18:20", "Telefone": 5571982597669, "Nome": "JONAS ALVES PAIVA", "Número do boleto": 3254258, "Valor": 65.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 12:21:12", "Telefone": 5571988474403, "Nome": "MARCIO TIMOTEO DE MATOS SANTOS", "Número do boleto": 3255368, "Valor": 141.12, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 12:29:42", "Telefone": 5575982009476, "Nome": "WARLISON TAVARES GOMES", "Número do boleto": 3255762, "Valor": 237.81, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 12:33:30", "Telefone": 5571991447630, "Nome": "LAURINDA SILVA PEREIRA DA SILVA", "Número do boleto": 3255963, "Valor": 118.71, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 12:37:42", "Telefone": 5575983112144, "Nome": "EDVALDO ARAUJO DOS SANTOS", "Número do boleto": 3254755, "Valor": 357.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 12:46:05", "Telefone": 5575988728545, "Nome": "ANTONIO QUEIROZ ALVES JUNIOR", "Número do boleto": 3254546, "Valor": 175.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 13:06:47", "Telefone": 5571988168973, "Nome": "CARLOS BRENDON SALES MOURA", "Número do boleto": 3244337, "Valor": 169.81, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 12:49:02", "Telefone": 5571984687106, "Nome": "JAIRIVALDO CARVALHO MOTA", "Número do boleto": 3255030, "Valor": 150.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 13:13:44", "Telefone": 5571984014384, "Nome": "ICSON ALAN DE SENA FIGUEIREDO", "Número do boleto": 3251170, "Valor": 53.91, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 13:22:14", "Telefone": 5575983661968, "Nome": "CLAUDIANO BARBOSA LIMA", "Número do boleto": 3254617, "Valor": 159.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 13:29:06", "Telefone": 5575991091300, "Nome": "RAFAEL MARQUES SANTOS REIS", "Número do boleto": 3255538, "Valor": 254.52, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/07/26 13:38:57", "Telefone": 5575999959556, "Nome": "CARLOS OLIVEIRA DA ANUNCIACAO", "Número do boleto": 3254597, "Valor": 139.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 14:46:27", "Telefone": 5571992030912, "Nome": "GRAZIELE DA SILVA RODRIGUES", "Número do boleto": 3227222, "Valor": 171.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 14, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 14:53:35", "Telefone": 5575988749249, "Nome": "EDMILSON FIGUEIREDO SANTOS", "Número do boleto": 3223289, "Valor": 220.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 14, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 16:42:27", "Telefone": 5571981002037, "Nome": "VALDESON DA SILVA SANTOS", "Número do boleto": 3244858, "Valor": 76.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 16, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 18:57:39", "Telefone": 5575991587023, "Nome": "ANA PAULA MEDEIROS OLIVEIRA", "Número do boleto": 3218438, "Valor": 183.5, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 18, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 19:15:04", "Telefone": 5575999877873, "Nome": "WILLIAM OLIVEIRA DE SA", "Número do boleto": 3255777, "Valor": 194.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 19, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 19:20:36", "Telefone": 5571982792892, "Nome": "EDMILSON  MENEZES MOREIRA", "Número do boleto": 3223253, "Valor": 184.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 19, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/07/26 20:40:53", "Telefone": 5571996177811, "Nome": "LINDINALVA LIMA SANTOS BASILIO", "Número do boleto": 3255827, "Valor": 146.8, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 20, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/07/26 19:24:03", "Telefone": 5575991833825, "Nome": "FLORISVALDO CONCEICAO DOS SANTOS", "Número do boleto": 3254210, "Valor": 73.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 19, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/07/26 20:36:06", "Telefone": 5571986699023, "Nome": "ADILSON ABADE DOS SANTOS", "Número do boleto": 3254388, "Valor": 154.53, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 20, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "19/07/26 00:55:36", "Telefone": 5575982208889, "Nome": "VANUSA PASSOS", "Número do boleto": 3255746, "Valor": 174.81, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 0, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "19/07/26 06:20:21", "Telefone": 5571992703182, "Nome": "GIVANILSON SILVA DE SENA", "Número do boleto": 3254225, "Valor": 47.61, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 6, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "19/07/26 06:33:43", "Telefone": 5575983454952, "Nome": "ERIQUE FONSECA DE JESUS", "Número do boleto": 3249921, "Valor": 160.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 6, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "19/07/26 07:24:40", "Telefone": 5571996494255, "Nome": "ANTONIO LOPES DE OLIVEIRA", "Número do boleto": 3254538, "Valor": 179.89, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 7, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "19/07/26 07:39:29", "Telefone": 5573998196536, "Nome": "HAIANA SANTOS MORAES", "Número do boleto": 3256211, "Valor": 88.02, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 7, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 09:04:44", "Telefone": 5575982376023, "Nome": "ANDREA DOS SANTOS DE JESUS", "Número do boleto": 3218816, "Valor": 64.9, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "28/07/26 09:37:18", "Telefone": 5575988127380, "Nome": "JOSE MARIO CARDOSO MARQUES", "Número do boleto": 3250496, "Valor": 123.2, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 09:39:27", "Telefone": 5571982780646, "Nome": "IVANILDO SILVA DOS SANTOS", "Número do boleto": 3254239, "Valor": 92.12, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "19/07/26 09:32:00", "Telefone": 5575982213766, "Nome": "LUCIANO CERQUEIRA DE ALMEIDA", "Número do boleto": 3234530, "Valor": 125.9, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "26/07/26 23:19:58", "Telefone": 5575999073714, "Nome": "RUBEM BARBOSA DE ARAUJO", "Número do boleto": 3240983, "Valor": 184.0, "Vencimento Original": "28/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 23, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 09:42:11", "Telefone": 5571981519049, "Nome": "TAISE CAMPOS MINAS NOVAS", "Número do boleto": 3255688, "Valor": 175.45, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 09:42:55", "Telefone": 5571999055670, "Nome": "ANDREZA CAROLINE SILVA ANDRADE", "Número do boleto": 3254505, "Valor": 141.12, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 09:45:55", "Telefone": 5575981753321, "Nome": "CRISTIANO DE OLIVEIRA FONSECA", "Número do boleto": 3246351, "Valor": 56.9, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "28/07/26 09:47:42", "Telefone": 5571988276549, "Nome": "KAUAN FONSECA DE JESUS", "Número do boleto": 3255243, "Valor": 181.8, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 10:22:15", "Telefone": 5575982642439, "Nome": "JAN CLAY ALVES DE OLIVEIRA", "Número do boleto": 3229040, "Valor": 175.8, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 10:28:00", "Telefone": 5575991512959, "Nome": "DHONATAS ALVES DA SILVA", "Número do boleto": 3256192, "Valor": 118.71, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 09:55:52", "Telefone": 5575998671379, "Nome": "ADAILTO MATIAS DOS SANTOS", "Número do boleto": 3256473, "Valor": 119.52, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 10:36:44", "Telefone": 5521969704774, "Nome": "JOSE JORGE BARBOSA", "Número do boleto": 3255182, "Valor": 124.9, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "21", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 10:45:44", "Telefone": 5575983473388, "Nome": "LEOMAR PEREIRA DOS SANTOS", "Número do boleto": 3254109, "Valor": 212.61, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 10:48:00", "Telefone": 5575999571815, "Nome": "JOAN SOUZA SOARES", "Número do boleto": 3229499, "Valor": 120.7, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 11:13:27", "Telefone": 5575998210026, "Nome": "NATANAEL DA SILVA CARDOSO", "Número do boleto": 3253522, "Valor": 159.8, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 11:20:58", "Telefone": 5571982290457, "Nome": "JOSE ROBERTO BOMFIM CONCEIÇÃO", "Número do boleto": 3255198, "Valor": 145.9, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 12:32:27", "Telefone": 5573999109298, "Nome": "UILLE NAZARIO SMITH", "Número do boleto": 3255718, "Valor": 157.9, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 13:41:27", "Telefone": 5571981702891, "Nome": "HAMILTON VASCONCELOS DE JESUS", "Número do boleto": 3256222, "Valor": 59.9, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "28/07/26 13:48:42", "Telefone": 5571999367224, "Nome": "EFIGENIO COSTA DE JESUS", "Número do boleto": 3254761, "Valor": 203.22, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 14:05:56", "Telefone": 5575999885996, "Nome": "JUSSIANE ALVES DE OLIVEIRA LISBOA", "Número do boleto": 3255239, "Valor": 176.22, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 14, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "28/07/26 18:07:47", "Telefone": 5575988753683, "Nome": "JURANDI ALVES DOS SANTOS", "Número do boleto": 3253250, "Valor": 144.21, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 18, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "28/07/26 19:35:17", "Telefone": 5575982911018, "Nome": "LUIS ALBERTO SANTANA CRUZ", "Número do boleto": 3255324, "Valor": 186.03, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 19, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "30/07/26 09:19:50", "Telefone": 5571997249387, "Nome": "ELENILDO FRANCISCO PEREIRA", "Número do boleto": 3247711, "Valor": 141.8, "Vencimento Original": "30/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 09:13:43", "Telefone": 5573981412524, "Nome": "ADILSON DA SILVA PORTO", "Número do boleto": 3216963, "Valor": 161.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 09:51:54", "Telefone": 5571999197847, "Nome": "JOSE FERREIRA LIMA JUNIOR", "Número do boleto": 3231534, "Valor": 207.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 09:53:12", "Telefone": 5571999639913, "Nome": "JUCILEIDE ARAUJO DE SOUZA", "Número do boleto": 3232974, "Valor": 144.12, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 09:58:29", "Telefone": 5575998556613, "Nome": "CLAUDEMIR BATISTA DE OLIVEIRA", "Número do boleto": 3221112, "Valor": 120.0, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:01:20", "Telefone": 5571999225888, "Nome": "ANDREY LUCCA BARROS GOES", "Número do boleto": 3218853, "Valor": 159.32, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:01:23", "Telefone": 5571991631576, "Nome": "CLAUDIONOR DE SOUZA JUNIOR", "Número do boleto": 3221346, "Valor": 172.62, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 10:04:20", "Telefone": 5575999076494, "Nome": "MARIO BORGES DOS SANTOS FILHO", "Número do boleto": 3236619, "Valor": 169.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 10:19:37", "Telefone": 5575997130863, "Nome": "MARCOS FAGUNDES DOS SANTOS", "Número do boleto": 3235971, "Valor": 147.81, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:23:33", "Telefone": 5575999394964, "Nome": "SATURNINO FERREIRA FREITAS NETO", "Número do boleto": 3241254, "Valor": 131.0, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:24:44", "Telefone": 5571981519049, "Nome": "TAISE CAMPOS MINAS NOVAS", "Número do boleto": 3241821, "Valor": 62.82, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 10:26:50", "Telefone": 5575981599302, "Nome": "SERGIO ITALO OLIVEIRA SANTOS", "Número do boleto": 3241407, "Valor": 144.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:42:33", "Telefone": 5571999498622, "Nome": "VANESSA DE MELO SOUZA", "Número do boleto": 3253889, "Valor": 47.61, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 10:47:07", "Telefone": 5575991643470, "Nome": "IGOR LEONARDO SANTOS COSTA", "Número do boleto": 3247888, "Valor": 175.15, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 10:48:42", "Telefone": 5575981674535, "Nome": "JURANDI MIGUEL DOS SANTOS", "Número do boleto": 3251142, "Valor": 47.61, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 10:49:08", "Telefone": 5575998231425, "Nome": "JOSE WILDE DA SILVA SOUZA", "Número do boleto": 3256290, "Valor": 136.62, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:54:20", "Telefone": 5573999326016, "Nome": "AGLYSSA SOUZA SILVA", "Número do boleto": 3256564, "Valor": 73.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 10:57:01", "Telefone": 5571984371088, "Nome": "JEAN MARCEL SENTO SE PEREIRA DA SILA", "Número do boleto": 3253582, "Valor": 114.65, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 10:57:43", "Telefone": 5575982314619, "Nome": "RODRIGO PEREIRA DOS SANTOS", "Número do boleto": 3256788, "Valor": 64.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 11:03:07", "Telefone": 5575999479426, "Nome": "ANTONIEL DA SILVA SOUZA", "Número do boleto": 3256385, "Valor": 46.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 11:04:38", "Telefone": 5571989290561, "Nome": "CLEITON BARRETO AMORIM", "Número do boleto": 3256613, "Valor": 70.61, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 11:07:23", "Telefone": 5575999009218, "Nome": "JULIANE IRACEMA DOS SANTOS", "Número do boleto": 3256715, "Valor": 65.61, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 11:11:30", "Telefone": 5575999767657, "Nome": "ADRIANA DIAS DE SOUZA", "Número do boleto": 3256869, "Valor": 327.12, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "08/08/26 11:11:34", "Telefone": 5571999898050, "Nome": "GENIVAL PEREIRA DE MELO", "Número do boleto": 3250792, "Valor": 157.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:12:24", "Telefone": 5571992930032, "Nome": "HERCULES DA SILVA BANDEIRA", "Número do boleto": 3251113, "Valor": 118.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:14:03", "Telefone": 5575991126548, "Nome": "DIEGO BARBOSA SILVA", "Número do boleto": 3257161, "Valor": 155.14, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:16:38", "Telefone": 5571996244948, "Nome": "CARLA ADRIELE BASTOS VICENTE", "Número do boleto": 3220122, "Valor": 127.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:18:09", "Telefone": 5575991428584, "Nome": "MARCOS PAULO PORTELA SANTOS", "Número do boleto": 3235998, "Valor": 84.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:26:37", "Telefone": 5573999087275, "Nome": "ALEX ALVES DOS SANTOS", "Número do boleto": 3256910, "Valor": 141.03, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:27:19", "Telefone": 5534984011902, "Nome": "EDNALDO SILVA SOUZA", "Número do boleto": 3257222, "Valor": 177.62, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "34", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 11:29:05", "Telefone": 5575998321594, "Nome": "MARCOS SANTOS DA PAZ", "Número do boleto": 3256410, "Valor": 132.12, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:34:36", "Telefone": 5575999358114, "Nome": "JURANDY CARVALHO DE SANTANA", "Número do boleto": 3257739, "Valor": 156.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:40:56", "Telefone": 5575991573256, "Nome": "RAPHAEL MATOS ROCHA PITA", "Número do boleto": 3258061, "Valor": 196.92, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 11:43:55", "Telefone": 5575991640226, "Nome": "MARCELO ALMEIDA SILVA", "Número do boleto": 3257868, "Valor": 118.71, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 11:54:18", "Telefone": 5571991877080, "Nome": "PEDRO HERRIQUE DA CONCEICAO DE AMORIM", "Número do boleto": 3258029, "Valor": 172.7, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 11:58:25", "Telefone": 5575988694468, "Nome": "LAILA MENEZES DE SA", "Número do boleto": 3257752, "Valor": 189.12, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 12:01:57", "Telefone": 5575999670935, "Nome": "FRANCISCO HENRIQUE FERREIRA COSTA JUNIOR", "Número do boleto": 3258369, "Valor": 170.91, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 12:03:10", "Telefone": 5571999154691, "Nome": "ELAN CARLOS DA SILVA", "Número do boleto": 3258340, "Valor": 259.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "08/08/26 12:04:12", "Telefone": 5571981943761, "Nome": "FREDY ROCHA DE QUEIROZ", "Número do boleto": 3258615, "Valor": 131.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 12:06:59", "Telefone": 5575991194297, "Nome": "NEIVALDO MENDES DE SOUZA", "Número do boleto": 3257973, "Valor": 254.7, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "08/08/26 12:17:48", "Telefone": 5575982303807, "Nome": "ANATANIEL SANTOS LIMA", "Número do boleto": 3218556, "Valor": 136.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 12:22:09", "Telefone": 5571982372299, "Nome": "RAIMUNDO NONATO MENDES DE SOUZA", "Número do boleto": 3239112, "Valor": 157.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 12:27:53", "Telefone": 5575983213957, "Nome": "EVSON SANTOS SILVA", "Número do boleto": 3257316, "Valor": 183.81, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 12:29:58", "Telefone": 5571983001525, "Nome": "LEIDISON AIALA CRUZ DOS SANTOS", "Número do boleto": 3257771, "Valor": 154.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 12:37:12", "Telefone": 5575981988488, "Nome": "DIDIER SAMPAIO DOS SANTOS", "Número do boleto": 3257160, "Valor": 126.71, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 12:49:42", "Telefone": 5575998320812, "Nome": "JORGE JEZLER MALHADO FILHO", "Número do boleto": 3257634, "Valor": 123.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 12:54:50", "Telefone": 5571996070998, "Nome": "EDINILTON CARNEIRO FERREIRA", "Número do boleto": 3257206, "Valor": 209.91, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 12, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 13:08:28", "Telefone": 5571997317476, "Nome": "ANTONIO DOS SANTOS RIBEIRO", "Número do boleto": 3219258, "Valor": 144.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 13:33:38", "Telefone": 5571991441579, "Nome": "ALINE SANTANA DE SOUZA", "Número do boleto": 3256930, "Valor": 203.22, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 13, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 14:38:50", "Telefone": 5575999802538, "Nome": "CARLOS EDUARDO CONCEICAO LIMA", "Número do boleto": 3257071, "Valor": 116.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 14, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 14:44:43", "Telefone": 5575982703387, "Nome": "VALTER RIBEIRO BARBOSA", "Número do boleto": 3258254, "Valor": 134.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 14, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 15:30:39", "Telefone": 5575988527028, "Nome": "ANTONIO RAIMUNDO SANTOS OLIVEIRA", "Número do boleto": 3219438, "Valor": 252.8, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 15, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "08/08/26 15:54:49", "Telefone": 5574999204021, "Nome": "RIVALDO SAMPAIO BRITO", "Número do boleto": 3253695, "Valor": 142.19, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "74", "Hora": 15, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 16:52:07", "Telefone": 5575981022811, "Nome": "CLAUDINEI SANTOS RAMOS", "Número do boleto": 3221166, "Valor": 51.0, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 16, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 17:35:16", "Telefone": 5571982102050, "Nome": "RAFAELITO OLIVEIRA IMPROTA JUNIOR", "Número do boleto": 3258049, "Valor": 217.52, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 17, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 17:35:57", "Telefone": 5575983519935, "Nome": "EDVALDO MIRANDA BERNARDO", "Número do boleto": 3256635, "Valor": 64.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 17, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "08/08/26 18:27:23", "Telefone": 5575981510080, "Nome": "LUIZ CARLOS OLIVEIRA", "Número do boleto": 3234936, "Valor": 224.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 18, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "08/08/26 18:59:37", "Telefone": 5575983577018, "Nome": "UELINTON DOS SANTOS SOARES", "Número do boleto": 3250937, "Valor": 144.21, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 18, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 19:08:11", "Telefone": 5575999133353, "Nome": "OZANAR VIEIRA DE JESUS", "Número do boleto": 3238050, "Valor": 100.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 19, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "08/08/26 20:41:58", "Telefone": 5571991129311, "Nome": "ANA LUCIA SOTER DE OLIVEIRA BARBUDA", "Número do boleto": 3256946, "Valor": 133.3, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 20, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "09/08/26 08:44:42", "Telefone": 5571992316753, "Nome": "FABIANO ALVES PASSOS", "Número do boleto": 3257318, "Valor": 160.02, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 8, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "09/08/26 08:47:44", "Telefone": 5575981591806, "Nome": "ELAINE OLIVEIRA PINTO", "Número do boleto": 3257247, "Valor": 129.44, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 8, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "09/08/26 10:26:52", "Telefone": 5575998226037, "Nome": "JORGE FELICIANO DA SILVA", "Número do boleto": 3257633, "Valor": 133.81, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "10/08/26 11:42:14", "Telefone": 5571997108950, "Nome": "MAURIZA SANTOS SANTANA CESAR", "Número do boleto": 3236952, "Valor": 176.6, "Vencimento Original": "12/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/08/26 09:06:20", "Telefone": 5571999356151, "Nome": "ALTAIR GONCALVES FERREIRA FILHO", "Número do boleto": 3218187, "Valor": 141.8, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 09:10:22", "Telefone": 5575982798628, "Nome": "BRUNO CAMPOS DOS SANTOS", "Número do boleto": 3219933, "Valor": 124.68, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 09:51:43", "Telefone": 5575988356121, "Nome": "LUCIMARY DE JESUS SANTOS", "Número do boleto": 3234711, "Valor": 140.95, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 10:07:23", "Telefone": 5571996042498, "Nome": "MARIO CONCEIÇÃO RAPOSO", "Número do boleto": 3236637, "Valor": 58.41, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/08/26 10:08:50", "Telefone": 5575988682313, "Nome": "LUCAS LIMA DANTAS", "Número do boleto": 3234369, "Valor": 107.01, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 10:13:55", "Telefone": 5575991106566, "Nome": "THAIS DA SILVA DO LIVRAMENTO", "Número do boleto": 3242028, "Valor": 67.9, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/08/26 10:20:43", "Telefone": 5575981425042, "Nome": "LUIZ ANTONIO LEITE DE CARVALHO JUNIOR", "Número do boleto": 3234864, "Valor": 181.8, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/08/26 10:25:16", "Telefone": 5575983319435, "Nome": "DORIVALDO PEREIRA LIMA", "Número do boleto": 3250440, "Valor": 136.62, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 10:25:40", "Telefone": 5575988786630, "Nome": "ELISIA SANTOS DA CONCEICAO", "Número do boleto": 3247565, "Valor": 64.9, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/08/26 10:26:04", "Telefone": 5575991401309, "Nome": "RAFAEL NOGUEIRA MARTINS", "Número do boleto": 3238860, "Valor": 167.9, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "18/08/26 10:37:24", "Telefone": 5571986562860, "Nome": "KEILLA MORAIS SALES", "Número do boleto": 3256484, "Valor": 71.91, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/08/26 10:51:32", "Telefone": 5575999597163, "Nome": "LUCIVAL DE JESUS VISITAÇAO", "Número do boleto": 3256831, "Valor": 65.61, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}, {"Data e hora": "18/08/26 10:52:04", "Telefone": 5575988349277, "Nome": "CALINI SANTOS COSTA", "Número do boleto": 3220068, "Valor": 137.8, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 10:52:41", "Telefone": 5573998196536, "Nome": "HAIANA SANTOS MORAES", "Número do boleto": 3256668, "Valor": 88.02, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 10:54:38", "Telefone": 5571982374275, "Nome": "ELIANE DA SILVA GOMES", "Número do boleto": 3257255, "Valor": 257.89, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/08/26 10:59:26", "Telefone": 5575983112144, "Nome": "EDVALDO ARAUJO DOS SANTOS", "Número do boleto": 3257241, "Valor": 357.8, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "18/08/26 10:59:32", "Telefone": 5573999597813, "Nome": "ANTONIO CARLOS DE JESUS VIEIRA", "Número do boleto": 3256986, "Valor": 158.19, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 10:59:34", "Telefone": 5575999289193, "Nome": "FLAVIO HENRIQUE BATISTA DA SILVA", "Número do boleto": 3256825, "Valor": 116.91, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 11:01:46", "Telefone": 5575999158867, "Nome": "ADENILSON ALMEIDA SILVA", "Número do boleto": 3216837, "Valor": 145.0, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "18/08/26 11:05:00", "Telefone": 5571982171834, "Nome": "CARLOS HENRIQUE SILVA SOARES", "Número do boleto": 3257075, "Valor": 186.12, "Vencimento Original": "20/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "20/07/26 09:15:00", "Telefone": "5575988112233", "Nome": "MARCOS ROBERTO SILVA", "Número do boleto": "3260111", "Valor": 145.5, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (No dia do vencimento)", "DDD": "75", "Hora": 9, "Regua": "No dia", "Base": "ServCar", "Veiculo": "Carro Passeio"}, {"Data e hora": "20/07/26 10:40:00", "Telefone": "5571999223344", "Nome": "FABIO SANTOS SOUZA", "Número do boleto": "3260222", "Valor": 180.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (No dia do vencimento)", "DDD": "71", "Hora": 10, "Regua": "No dia", "Base": "ServCar", "Veiculo": "SUV / Pick-up"}, {"Data e hora": "10/08/26 11:20:00", "Telefone": "5575981445566", "Nome": "CLAUDIO DIAS MOTA", "Número do boleto": "3260333", "Valor": 65.0, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (No dia do vencimento)", "DDD": "75", "Hora": 11, "Regua": "No dia", "Base": "ServTaxi", "Veiculo": "Moto"}, {"Data e hora": "25/07/26 09:30:00", "Telefone": "5575999887766", "Nome": "REGINALDO ALMEIDA ROCHA", "Número do boleto": "3260444", "Valor": 285.0, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (5 dias após vencimento)", "DDD": "75", "Hora": 9, "Regua": "5 dias depois", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}, {"Data e hora": "15/08/26 14:10:00", "Telefone": "5571988334455", "Nome": "DENILSON PEREIRA CRUZ", "Número do boleto": "3260555", "Valor": 159.9, "Vencimento Original": "10/08/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (5 dias após vencimento)", "DDD": "71", "Hora": 14, "Regua": "5 dias depois", "Base": "ServTaxi", "Veiculo": "Carro Passeio"}];
-        
-        let activeFilteredData = [...masterData];
+        let masterData = [];
+        let filteredData = [];
         let currentPage = 1;
         let rowsPerPage = 10;
         let sortColumn = 'Data e hora';
         let sortAsc = false;
-        let dateRangePicker = null;
 
-        // Instâncias dos Gráficos
         let chartVenc = null;
         let chartVeic = null;
         let chartHora = null;
         let chartDDD = null;
+        let flatpickrInstance = null;
 
-        // Contador de Sincronização
-        let countdown = 30;
-        setInterval(() => {
-            countdown--;
-            if (countdown <= 0) {
-                countdown = 30;
-                fetchSheetData(false);
-            }
-        }, 1000);
-
-        // Mapeia a aba correta da planilha Google Sheets conforme Base + Régua
-        function getTargetSheetName(base, regua) {
-            const baseTag = base === 'ServTaxi' ? 'ServTaxi' : 'ServCar';
-            if (regua === 'No dia') {
-                return `Busca no dia (${baseTag})`;
-            } else if (regua === '5 dias depois') {
-                return `Busca 5 dias depois (${baseTag})`;
-            } else {
-                return `Envio 2 dias antes (${baseTag})`;
-            }
-        }
-
-        function handleReguaOrBaseChange() {
-            fetchSheetData(false);
-        }
-
-        // Função de Consulta Direta à API do Google Sheets
+        // Leitura em tempo real do Google Sheets via API GViz
         async function fetchSheetData(manual = false) {
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
 
-            const baseSelect = document.getElementById('filter-base') ? document.getElementById('filter-base').value : 'ServCar';
-            const reguaSelect = document.getElementById('filter-regua') ? document.getElementById('filter-regua').value : '2 dias antes';
-            
-            const sheetToFetch = getTargetSheetName(baseSelect, reguaSelect);
-            const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetToFetch)}&t=${new Date().getTime()}`;
+            const savedRegua = document.getElementById('filter-regua').value;
+            const savedBase = document.getElementById('filter-base').value;
+            const savedVeic = document.getElementById('filter-veiculo').value;
+            const savedVenc = document.getElementById('filter-vencimento').value;
+            const savedFaixa = document.getElementById('filter-faixa-valor').value;
+            const savedDDD = document.getElementById('filter-ddd').value;
+            const savedTurno = document.getElementById('filter-turno').value;
+            const savedSearch = document.getElementById('search-global').value;
 
             try {
-                const response = await fetch(gvizUrl);
-                if (response.ok) {
-                    const text = await response.text();
-                    const match = text.match(/google\.visualization\.Query\.setResponse\((.+)\);/s);
-                    if (match && match[1]) {
-                        const data = JSON.parse(match[1]);
-                        if (data.table && data.table.rows) {
-                            const parsedRows = data.table.rows.map(r => {
-                                const c = r.c;
-                                if (!c) return null;
-                                const valBoleto = c[4] ? (typeof c[4].v === 'number' ? c[4].v : parseFloat(String(c[4].v).replace(',', '.'))) : 0;
-                                const phone = c[1] ? String(c[1].v) : '';
-                                const ddd = phone.length >= 4 ? phone.substring(2, 4) : '75';
-                                const dataHora = c[0] ? String(c[0].f || c[0].v) : '';
-                                let hora = 12;
-                                if (dataHora.includes(':')) {
-                                    const p = dataHora.split(' ');
-                                    if (p.length > 1) hora = parseInt(p[1].split(':')[0]) || 12;
-                                }
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+                const response = await fetch(url);
+                const csvText = await response.text();
 
-                                let veiculo = 'Carro Passeio';
-                                if (valBoleto <= 80) veiculo = 'Moto';
-                                else if (valBoleto <= 160) veiculo = 'Carro Passeio';
-                                else if (valBoleto <= 240) veiculo = 'SUV / Pick-up';
-                                else veiculo = 'Utilitário / Pesado';
+                masterData = parseCSVData(csvText);
 
-                                return {
-                                    'Data e hora': dataHora,
-                                    'Telefone': phone,
-                                    'Nome': c[2] ? String(c[2].v) : 'Não informado',
-                                    'Número do boleto': c[3] ? String(c[3].v) : '-',
-                                    'Valor': valBoleto || 0,
-                                    'Vencimento Original': c[5] ? String(c[5].f || c[5].v) : '-',
-                                    'Obs': c[6] ? String(c[6].v) : 'Mensagem enviada',
-                                    'Fluxo': c[7] ? String(c[7].v) : '-',
-                                    'DDD': ddd,
-                                    'Hora': hora,
-                                    'Base': baseSelect === 'ServTaxi' ? 'ServTaxi' : 'ServCar',
-                                    'Veiculo': veiculo,
-                                    'Regua': reguaSelect === 'ALL' ? '2 dias antes' : reguaSelect
-                                };
-                            }).filter(r => r && r.Nome && r.Nome !== 'teste' && r.Valor > 0);
+                populateFilterOptions();
 
-                            if (parsedRows.length > 0) {
-                                masterData = parsedRows;
-                            }
-                        }
-                    }
-                }
-            } catch (err) {
-                console.warn('Conexão direta Google Sheets usará cache dinâmico:', err);
+                // Restaura os filtros selecionados pelo usuário
+                document.getElementById('filter-regua').value = savedRegua || 'ALL';
+                document.getElementById('filter-base').value = savedBase || 'ALL';
+                document.getElementById('filter-veiculo').value = savedVeic || 'ALL';
+                document.getElementById('filter-vencimento').value = savedVenc || 'ALL';
+                document.getElementById('filter-faixa-valor').value = savedFaixa || 'ALL';
+                document.getElementById('filter-ddd').value = savedDDD || 'ALL';
+                document.getElementById('filter-turno').value = savedTurno || 'ALL';
+                document.getElementById('search-global').value = savedSearch || '';
+
+                const now = new Date();
+                document.getElementById('last-sync-time').innerText = now.toLocaleTimeString('pt-BR');
+
+            } catch (error) {
+                console.error("Erro ao sincronizar com o Google Sheets:", error);
+            } finally {
+                if (icon) icon.classList.remove('animate-spin');
+                applyAllFilters();
             }
-
-            const now = new Date();
-            document.getElementById('last-sync-time').innerText = now.toLocaleTimeString('pt-BR');
-            if (icon) icon.classList.remove('animate-spin');
-
-            populateDynamicDropdowns();
-            applyAllFilters();
         }
 
-        // Popula Dropdowns Dinâmicos (Vencimento, DDD)
-        function populateDynamicDropdowns() {
+        // Conversor flexível de CSV vindo do Google Sheets
+        function parseCSVData(csv) {
+            const lines = csv.split('\n').filter(l => l.trim() !== '');
+            if (lines.length < 2) return [];
+
+            const parseRow = (rowStr) => {
+                const matches = [];
+                let match;
+                const regex = /(?:^|;|,)(?:"([^"]*)"|([^;,"]*))/g;
+                while ((match = regex.exec(rowStr)) !== null) {
+                    matches.push(match[1] !== undefined ? match[1] : match[2]);
+                }
+                return matches;
+            };
+
+            const headers = parseRow(lines[0]).map(h => h.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const cols = parseRow(lines[i]);
+                if (cols.length === 0) continue;
+
+                let rowObj = {};
+                headers.forEach((h, idx) => {
+                    rowObj[h] = cols[idx] ? cols[idx].trim() : '';
+                });
+
+                // Tratamento e Normalização de Campos
+                const rawVal = String(rowObj['Valor'] || '0').replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+                const valorNum = parseFloat(rawVal) || 0;
+
+                const phoneStr = String(rowObj['Telefone'] || '').replace(/\D/g, '');
+                let ddd = 'N/I';
+                if (phoneStr.length >= 10) {
+                    ddd = phoneStr.startsWith('55') ? phoneStr.substring(2, 4) : phoneStr.substring(0, 2);
+                }
+
+                let horaNum = 0;
+                const dataHora = rowObj['Data e hora'] || '';
+                if (dataHora.includes(':')) {
+                    const parts = dataHora.split(' ');
+                    const timePart = parts[parts.length - 1];
+                    if (timePart) horaNum = parseInt(timePart.split(':')[0], 10) || 0;
+                }
+
+                let reguaCalculada = 'No dia';
+                const fluxo = (rowObj['Fluxo'] || rowObj['Régua'] || '').toLowerCase();
+                if (fluxo.includes('2 dias') || fluxo.includes('antes')) reguaCalculada = '2 dias antes';
+                else if (fluxo.includes('5 dias') || fluxo.includes('depois') || fluxo.includes('após')) reguaCalculada = '5 dias depois';
+
+                let baseCalculada = 'ServCar';
+                if (fluxo.includes('taxi') || fluxo.includes('táxi')) baseCalculada = 'ServTaxi';
+
+                let veiculoClass = 'Carro Passeio';
+                if (valorNum <= 80) veiculoClass = 'Moto';
+                else if (valorNum > 160 && valorNum <= 240) veiculoClass = 'SUV / Pick-up';
+                else if (valorNum > 240) veiculoClass = 'Utilitário / Pesado';
+
+                rowObj.Valor = valorNum;
+                rowObj.DDD = ddd;
+                rowObj.Hora = horaNum;
+                rowObj.Regua = rowObj.Regua || reguaCalculada;
+                rowObj.Base = rowObj.Base || baseCalculada;
+                rowObj.Veiculo = rowObj.Veiculo || veiculoClass;
+
+                data.push(rowObj);
+            }
+
+            return data;
+        }
+
+        // Opções de seletores dinâmicos sem resetar seleções
+        function populateFilterOptions() {
+            const currentVenc = document.getElementById('filter-vencimento').value;
+            const currentDDD = document.getElementById('filter-ddd').value;
+
+            const vencSet = new Set(masterData.map(r => r['Vencimento Original'] || r['Vencimento']).filter(Boolean));
+            const dddSet = new Set(masterData.map(r => r.DDD).filter(Boolean));
+
             const vencSelect = document.getElementById('filter-vencimento');
-            const dddSelect = document.getElementById('filter-ddd');
-
-            const currentVenc = vencSelect.value;
-            const currentDDD = dddSelect.value;
-
-            // Vencimentos
-            const vencs = Array.from(new Set(masterData.map(r => r['Vencimento Original']))).filter(Boolean).sort();
             vencSelect.innerHTML = '<option value="ALL">Todos os Vencimentos</option>';
-            vencs.forEach(v => {
+            Array.from(vencSet).sort().forEach(v => {
                 const opt = document.createElement('option');
                 opt.value = v;
-                opt.innerText = `Vencimento: ${v}`;
-                if (v === currentVenc) opt.selected = true;
+                opt.textContent = v;
                 vencSelect.appendChild(opt);
             });
+            vencSelect.value = currentVenc || 'ALL';
 
-            // DDDs
-            const ddds = Array.from(new Set(masterData.map(r => r.DDD))).filter(Boolean).sort();
+            const dddSelect = document.getElementById('filter-ddd');
             dddSelect.innerHTML = '<option value="ALL">Todos os DDDs</option>';
-            ddds.forEach(d => {
+            Array.from(dddSet).sort().forEach(d => {
                 const opt = document.createElement('option');
                 opt.value = d;
-                opt.innerText = `DDD ${d}`;
-                if (d === currentDDD) opt.selected = true;
+                opt.textContent = `DDD ${d}`;
                 dddSelect.appendChild(opt);
             });
+            dddSelect.value = currentDDD || 'ALL';
         }
 
-        // Aplicação de Todos os Filtros Concomitantemente
         function applyAllFilters() {
-            const filterRegua = document.getElementById('filter-regua').value;
-            const filterBase = document.getElementById('filter-base').value;
-            const filterVeic = document.getElementById('filter-veiculo').value;
-            const filterVenc = document.getElementById('filter-vencimento').value;
-            const filterFaixa = document.getElementById('filter-faixa-valor').value;
-            const filterDDD = document.getElementById('filter-ddd').value;
-            const filterTurno = document.getElementById('filter-turno').value;
+            const regua = document.getElementById('filter-regua').value;
+            const base = document.getElementById('filter-base').value;
+            const veiculo = document.getElementById('filter-veiculo').value;
+            const vencimento = document.getElementById('filter-vencimento').value;
+            const faixaValor = document.getElementById('filter-faixa-valor').value;
+            const ddd = document.getElementById('filter-ddd').value;
+            const turno = document.getElementById('filter-turno').value;
+            
             const valMin = parseFloat(document.getElementById('filter-val-min').value) || 0;
             const valMax = parseFloat(document.getElementById('filter-val-max').value) || Infinity;
-            const query = document.getElementById('search-global').value.toLowerCase().trim();
-            const dateRangeStr = document.getElementById('filter-data-range').value;
+            const search = document.getElementById('search-global').value.toLowerCase().trim();
 
-            let startDate = null;
-            let endDate = null;
-            if (dateRangeStr && dateRangeStr.includes(' até ')) {
-                const parts = dateRangeStr.split(' até ');
-                startDate = parseBrDate(parts[0]);
-                endDate = parseBrDate(parts[1]);
-            } else if (dateRangeStr) {
-                startDate = parseBrDate(dateRangeStr);
-                endDate = parseBrDate(dateRangeStr);
-            }
+            filteredData = masterData.filter(r => {
+                if (regua !== 'ALL' && r.Regua !== regua) return false;
+                if (base !== 'ALL' && r.Base !== base) return false;
+                if (veiculo !== 'ALL' && r.Veiculo !== veiculo) return false;
+                
+                const venc = r['Vencimento Original'] || r['Vencimento'];
+                if (vencimento !== 'ALL' && venc !== vencimento) return false;
+                if (ddd !== 'ALL' && r.DDD !== ddd) return false;
 
-            activeFilteredData = masterData.filter(row => {
-                // 1. Momento da Régua
-                if (filterRegua !== 'ALL' && row.Regua && row.Regua !== filterRegua) return false;
+                const val = r.Valor || 0;
+                if (faixaValor === 'f1' && val > 80) return false;
+                if (faixaValor === 'f2' && (val <= 80 || val > 140)) return false;
+                if (faixaValor === 'f3' && (val <= 140 || val > 200)) return false;
+                if (faixaValor === 'f4' && val <= 200) return false;
 
-                // 2. Base
-                if (filterBase !== 'ALL' && row.Base !== filterBase) return false;
+                if (val < valMin || val > valMax) return false;
 
-                // 3. Veículo
-                if (filterVeic !== 'ALL' && row.Veiculo !== filterVeic) return false;
+                const h = r.Hora || 0;
+                if (turno === 'manha' && (h < 6 || h >= 12)) return false;
+                if (turno === 'tarde' && (h < 12 || h >= 18)) return false;
+                if (turno === 'noite' && (h < 18 || h >= 23)) return false;
 
-                // 4. Vencimento
-                if (filterVenc !== 'ALL' && row['Vencimento Original'] !== filterVenc) return false;
-
-                // 5. Faixa Valor
-                if (filterFaixa === 'f1' && !(row.Valor <= 80)) return false;
-                if (filterFaixa === 'f2' && !(row.Valor > 80 && row.Valor <= 140)) return false;
-                if (filterFaixa === 'f3' && !(row.Valor > 140 && row.Valor <= 200)) return false;
-                if (filterFaixa === 'f4' && !(row.Valor > 200)) return false;
-
-                // 6. Min / Max
-                if (row.Valor < valMin || row.Valor > valMax) return false;
-
-                // 7. DDD
-                if (filterDDD !== 'ALL' && row.DDD !== filterDDD) return false;
-
-                // 8. Turno
-                if (filterTurno === 'manha' && !(row.Hora >= 6 && row.Hora < 12)) return false;
-                if (filterTurno === 'tarde' && !(row.Hora >= 12 && row.Hora < 18)) return false;
-                if (filterTurno === 'noite' && !(row.Hora >= 18 && row.Hora <= 23)) return false;
-
-                // 9. Período de Envio
-                if (startDate && endDate && row['Data e hora']) {
-                    const rowD = parseRowDate(row['Data e hora']);
-                    if (rowD && (rowD < startDate || rowD > endDate)) return false;
-                }
-
-                // 10. Busca Global
-                if (query) {
-                    const matchName = row.Nome && row.Nome.toLowerCase().includes(query);
-                    const matchPhone = row.Telefone && String(row.Telefone).includes(query);
-                    const matchBoleto = row['Número do boleto'] && String(row['Número do boleto']).includes(query);
-                    if (!matchName && !matchPhone && !matchBoleto) return false;
+                if (search) {
+                    const nameMatch = (r.Nome || r.Associado || '').toLowerCase().includes(search);
+                    const phoneMatch = String(r.Telefone || '').includes(search);
+                    const boletoMatch = String(r['Número do boleto'] || r.Boleto || '').includes(search);
+                    if (!nameMatch && !phoneMatch && !boletoMatch) return false;
                 }
 
                 return true;
             });
 
-            currentPage = 1;
-            updateKPICards();
+            document.getElementById('filtered-records-badge').innerText = `${filteredData.length} / ${masterData.length} registros`;
+
+            updateKPIs();
             renderCharts();
+            currentPage = 1;
             renderTable();
         }
 
-        function parseBrDate(s) {
-            if (!s) return null;
-            const p = s.trim().split('/');
-            if (p.length === 3) {
-                const y = p[2].length === 2 ? '20' + p[2] : p[2];
-                return new Date(y, parseInt(p[1]) - 1, parseInt(p[0]), 0, 0, 0);
-            }
-            return null;
-        }
-
-        function parseRowDate(s) {
-            if (!s) return null;
-            const part1 = s.split(' ')[0];
-            return parseBrDate(part1);
-        }
-
-        // Atualização dos Cards de KPI
-        function updateKPICards() {
-            const total = activeFilteredData.length;
-            const totalValor = activeFilteredData.reduce((acc, r) => acc + (r.Valor || 0), 0);
+        function updateKPIs() {
+            const total = filteredData.length;
+            const totalValor = filteredData.reduce((acc, r) => acc + (r.Valor || 0), 0);
             const ticketMedio = total > 0 ? totalValor / total : 0;
 
-            const sortedVal = [...activeFilteredData].map(r => r.Valor).sort((a, b) => a - b);
-            const mediana = sortedVal.length > 0 ? sortedVal[Math.floor(sortedVal.length / 2)] : 0;
-            const maxVal = sortedVal.length > 0 ? sortedVal[sortedVal.length - 1] : 0;
-            const minVal = sortedVal.length > 0 ? sortedVal[0] : 0;
-
-            // Vencimento mais frequente
-            const vCounts = {};
-            activeFilteredData.forEach(r => {
-                vCounts[r['Vencimento Original']] = (vCounts[r['Vencimento Original']] || 0) + 1;
-            });
-            let topV = '-';
-            let topVC = 0;
-            for (const [k, v] of Object.entries(vCounts)) {
-                if (v > topVC) { topV = k; topVC = v; }
-            }
-            const topVPct = total > 0 ? ((topVC / total) * 100).toFixed(1) : 0;
-
-            // DDD Top
-            const dCounts = {};
-            activeFilteredData.forEach(r => {
-                dCounts[r.DDD] = (dCounts[r.DDD] || 0) + 1;
-            });
-            let topD = '-';
-            let topDC = 0;
-            for (const [k, v] of Object.entries(dCounts)) {
-                if (v > topDC) { topD = k; topDC = v; }
-            }
-            const topDPct = total > 0 ? ((topDC / total) * 100).toFixed(1) : 0;
+            const valores = filteredData.map(r => r.Valor || 0).sort((a, b) => a - b);
+            const minVal = valores.length ? valores[0] : 0;
+            const maxVal = valores.length ? valores[valores.length - 1] : 0;
+            const mediana = valores.length ? (valores.length % 2 === 0 ? (valores[valores.length / 2 - 1] + valores[valores.length / 2]) / 2 : valores[Math.floor(valores.length / 2)]) : 0;
 
             document.getElementById('kpi-total-boletos').innerText = total.toLocaleString('pt-BR');
-            document.getElementById('kpi-pct-base').innerText = `${total > 0 ? ((total / masterData.length) * 100).toFixed(1) : 0}% da base total`;
             document.getElementById('kpi-total-valor').innerText = totalValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('kpi-ticket-medio').innerText = ticketMedio.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('kpi-mediana').innerText = `Mediana: ${mediana.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
             document.getElementById('kpi-max-boleto').innerText = `Max: ${maxVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
             document.getElementById('kpi-min-boleto').innerText = `Min: ${minVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-            document.getElementById('kpi-top-vencimento').innerText = topV;
-            document.getElementById('kpi-top-vencimento-share').innerText = `${topVC} boletos (${topVPct}%)`;
-            document.getElementById('kpi-top-ddd').innerText = topD !== '-' ? `DDD ${topD}` : '-';
-            document.getElementById('kpi-top-ddd-pct').innerText = `${topDC} associados (${topDPct}%)`;
-            document.getElementById('filtered-records-badge').innerText = `${total} / ${masterData.length} registros`;
+
+            const vencFreq = {};
+            filteredData.forEach(r => {
+                const v = r['Vencimento Original'] || r['Vencimento'];
+                if (v) vencFreq[v] = (vencFreq[v] || 0) + 1;
+            });
+            let topVenc = '-';
+            let topVencCount = 0;
+            for (const [k, v] of Object.entries(vencFreq)) {
+                if (v > topVencCount) { topVencCount = v; topVenc = k; }
+            }
+            const pctVenc = total > 0 ? ((topVencCount / total) * 100).toFixed(1) : 0;
+            document.getElementById('kpi-top-vencimento').innerText = topVenc;
+            document.getElementById('kpi-top-vencimento-share').innerText = `${topVencCount} boletos (${pctVenc}%)`;
+
+            const dddFreq = {};
+            filteredData.forEach(r => {
+                if (r.DDD) dddFreq[r.DDD] = (dddFreq[r.DDD] || 0) + 1;
+            });
+            let topDDD = '-';
+            let topDDDCount = 0;
+            for (const [k, v] of Object.entries(dddFreq)) {
+                if (v > topDDDCount) { topDDDCount = v; topDDD = k; }
+            }
+            document.getElementById('kpi-top-ddd').innerText = topDDD !== '-' ? `DDD ${topDDD}` : '-';
+            document.getElementById('kpi-top-ddd-pct').innerText = `${topDDDCount} associados`;
         }
 
-        // Renderização dos Gráficos Dinâmicos
         function renderCharts() {
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
 
-            // 1. Chart Vencimentos
-            const vMap = {};
-            activeFilteredData.forEach(r => {
-                const v = r['Vencimento Original'] || '-';
-                if (!vMap[v]) vMap[v] = { count: 0, total: 0 };
-                vMap[v].count++;
-                vMap[v].total += r.Valor;
+            // 1. Vencimentos x Valor
+            const vencMap = {};
+            filteredData.forEach(r => {
+                const k = r['Vencimento Original'] || r['Vencimento'] || 'Outros';
+                vencMap[k] = (vencMap[k] || 0) + (r.Valor || 0);
             });
-
-            const sortedVencs = Object.keys(vMap).sort((a, b) => {
-                const da = parseBrDate(a) || new Date(0);
-                const db = parseBrDate(b) || new Date(0);
-                return da - db;
-            });
-
             const ctxV = document.getElementById('chartVencimentos').getContext('2d');
             if (chartVenc) chartVenc.destroy();
             chartVenc = new Chart(ctxV, {
                 type: 'bar',
                 data: {
-                    labels: sortedVencs,
-                    datasets: [
-                        {
-                            label: 'Qtd Boletos',
-                            data: sortedVencs.map(k => vMap[k].count),
-                            backgroundColor: 'rgba(16, 185, 129, 0.75)',
-                            borderColor: '#10b981',
-                            borderWidth: 1,
-                            borderRadius: 6,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Valor Total (R$)',
-                            data: sortedVencs.map(k => vMap[k].total),
-                            type: 'line',
-                            borderColor: '#38bdf8',
-                            backgroundColor: 'rgba(56, 189, 248, 0.2)',
-                            tension: 0.3,
-                            fill: false,
-                            pointRadius: 4,
-                            yAxisID: 'y1'
-                        }
-                    ]
+                    labels: Object.keys(vencMap),
+                    datasets: [{
+                        label: 'Valor Total (R$)',
+                        data: Object.values(vencMap),
+                        backgroundColor: 'rgba(16, 185, 129, 0.75)',
+                        borderRadius: 6
+                    }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            position: 'left',
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            title: { display: true, text: 'Qtd' }
-                        },
-                        y1: {
-                            type: 'linear',
-                            position: 'right',
-                            grid: { drawOnChartArea: false },
-                            ticks: { callback: v => 'R$ ' + v.toLocaleString('pt-BR') },
-                            title: { display: true, text: 'R$' }
-                        },
-                        x: { grid: { display: false } }
-                    },
-                    plugins: { legend: { position: 'top' } }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 2. Chart Composição por Tipo de Veículo
-            const vCounts = { 'Moto': 0, 'Carro Passeio': 0, 'SUV / Pick-up': 0, 'Utilitário / Pesado': 0 };
-            activeFilteredData.forEach(r => {
-                if (vCounts[r.Veiculo] !== undefined) vCounts[r.Veiculo]++;
-                else vCounts['Carro Passeio']++;
+            // 2. Veículos
+            const veicMap = {};
+            filteredData.forEach(r => {
+                const k = r.Veiculo || 'Outros';
+                veicMap[k] = (veicMap[k] || 0) + 1;
             });
-
             const ctxVeic = document.getElementById('chartVeiculos').getContext('2d');
             if (chartVeic) chartVeic.destroy();
             chartVeic = new Chart(ctxVeic, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(vCounts),
+                    labels: Object.keys(veicMap),
                     datasets: [{
-                        data: Object.values(vCounts),
-                        backgroundColor: ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b'],
-                        borderWidth: 0
+                        data: Object.values(veicMap),
+                        backgroundColor: ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#ec4899']
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 3. Chart Horários
-            const hMap = Array(24).fill(0);
-            activeFilteredData.forEach(r => {
-                if (r.Hora !== undefined && r.Hora >= 0 && r.Hora < 24) hMap[r.Hora]++;
+            // 3. Horários
+            const horaMap = {};
+            filteredData.forEach(r => {
+                const h = r.Hora !== undefined ? `${r.Hora}h` : 'N/I';
+                horaMap[h] = (horaMap[h] || 0) + 1;
             });
-            const hoursLabel = [];
-            const hoursVal = [];
-            for (let h = 6; h <= 21; h++) {
-                hoursLabel.push(`${h}h`);
-                hoursVal.push(hMap[h]);
-            }
-
             const ctxH = document.getElementById('chartHorarios').getContext('2d');
             if (chartHora) chartHora.destroy();
             chartHora = new Chart(ctxH, {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: hoursLabel,
+                    labels: Object.keys(horaMap),
                     datasets: [{
                         label: 'Disparos',
-                        data: hoursVal,
-                        backgroundColor: 'rgba(244, 114, 182, 0.75)',
-                        borderColor: '#f472b6',
-                        borderWidth: 1,
-                        borderRadius: 4
+                        data: Object.values(horaMap),
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236, 72, 153, 0.15)',
+                        fill: true,
+                        tension: 0.3
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        x: { grid: { display: false } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 4. Chart DDDs
-            const dMap = {};
-            activeFilteredData.forEach(r => {
-                dMap[r.DDD] = (dMap[r.DDD] || 0) + 1;
+            // 4. DDDs
+            const dddMap = {};
+            filteredData.forEach(r => {
+                const d = r.DDD ? `DDD ${r.DDD}` : 'N/I';
+                dddMap[d] = (dddMap[d] || 0) + 1;
             });
-            const sortedD = Object.keys(dMap).sort((a, b) => dMap[b] - dMap[a]);
-
             const ctxD = document.getElementById('chartDDDs').getContext('2d');
             if (chartDDD) chartDDD.destroy();
             chartDDD = new Chart(ctxD, {
                 type: 'bar',
                 data: {
-                    labels: sortedD.map(d => `DDD ${d}`),
+                    labels: Object.keys(dddMap),
                     datasets: [{
                         label: 'Associados',
-                        data: sortedD.map(d => dMap[d]),
-                        backgroundColor: 'rgba(167, 139, 250, 0.75)',
-                        borderColor: '#a78bfa',
-                        borderWidth: 1,
-                        borderRadius: 4
+                        data: Object.values(dddMap),
+                        backgroundColor: '#8b5cf6',
+                        borderRadius: 6
                     }]
                 },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        y: { grid: { display: false } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
-        // Renderização da Tabela com Ordenação
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            filteredData.sort((a, b) => {
+                let valA = a[sortColumn] || '';
+                let valB = b[sortColumn] || '';
+                if (typeof valA === 'string') valA = valA.toLowerCase();
+                if (typeof valB === 'string') valB = valB.toLowerCase();
+                if (valA < valB) return sortAsc ? -1 : 1;
+                if (valA > valB) return sortAsc ? 1 : -1;
+                return 0;
+            });
+
+            const total = filteredData.length;
+            const limit = rowsPerPage === 'all' ? total : parseInt(rowsPerPage);
+            const totalPages = Math.ceil(total / limit) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * limit;
+            const end = rowsPerPage === 'all' ? total : Math.min(start + limit, total);
+            const pageData = filteredData.slice(start, end);
+
+            pageData.forEach(r => {
+                const tr = document.createElement('tr');
+                
+                const obsText = (r.Obs || r.Status || '').toLowerCase();
+                const isEnviado = obsText.includes('enviada') || obsText.includes('sucesso') || obsText.includes('enviado');
+
+                let badgeHTML = '';
+                if (isEnviado) {
+                    tr.className = 'hover:bg-slate-800/40 transition';
+                    badgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i data-lucide="check-circle" class="w-3 h-3"></i> ${r.Obs || 'Enviado'}</span>`;
+                } else {
+                    tr.className = 'bg-rose-950/20 hover:bg-rose-900/30 transition border-l-2 border-rose-500';
+                    badgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${r.Obs || 'Não Enviada'}</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-2.5 px-3.5 font-mono text-slate-400">${r['Data e hora'] || '-'}</td>
+                    <td class="py-2.5 px-3.5 font-semibold text-rose-300">${r.Regua || '-'}</td>
+                    <td class="py-2.5 px-3.5">${r.Base || '-'}</td>
+                    <td class="py-2.5 px-3.5 font-bold text-white">${r.Nome || r.Associado || '-'}</td>
+                    <td class="py-2.5 px-3.5 font-mono text-slate-400">${r.Telefone || '-'}</td>
+                    <td class="py-2.5 px-3.5 text-center">${r.Veiculo || '-'}</td>
+                    <td class="py-2.5 px-3.5 text-center font-mono text-emerald-400">${r['Número do boleto'] || r.Boleto || '-'}</td>
+                    <td class="py-2.5 px-3.5 text-right font-mono font-bold text-white">${(r.Valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td class="py-2.5 px-3.5 text-center font-mono text-amber-300">${r['Vencimento Original'] || r['Vencimento'] || '-'}</td>
+                    <td class="py-2.5 px-3.5 text-center">${badgeHTML}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('table-pagination-info').innerText = `Mostrando ${total === 0 ? 0 : start + 1} a ${end} de ${total} registros`;
+            document.getElementById('page-indicator').innerText = `${currentPage} / ${totalPages}`;
+            document.getElementById('btn-prev').disabled = currentPage <= 1;
+            document.getElementById('btn-next').disabled = currentPage >= totalPages;
+
+            lucide.createIcons();
+        }
+
         function sortTable(col) {
             if (sortColumn === col) {
                 sortAsc = !sortAsc;
@@ -965,92 +910,16 @@
                 sortColumn = col;
                 sortAsc = true;
             }
-
-            activeFilteredData.sort((a, b) => {
-                let valA = a[col];
-                let valB = b[col];
-
-                if (col === 'Valor') {
-                    valA = a.Valor || 0;
-                    valB = b.Valor || 0;
-                } else if (col === 'Data e hora' || col === 'Vencimento Original') {
-                    valA = parseRowDate(valA) || new Date(0);
-                    valB = parseRowDate(valB) || new Date(0);
-                } else {
-                    valA = String(valA || '').toLowerCase();
-                    valB = String(valB || '').toLowerCase();
-                }
-
-                if (valA < valB) return sortAsc ? -1 : 1;
-                if (valA > valB) return sortAsc ? 1 : -1;
-                return 0;
-            });
-
             renderTable();
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-
-            const isAll = rowsPerPage === 'all' || rowsPerPage >= activeFilteredData.length;
-            const start = isAll ? 0 : (currentPage - 1) * rowsPerPage;
-            const end = isAll ? activeFilteredData.length : start + rowsPerPage;
-            const rows = activeFilteredData.slice(start, end);
-
-            if (rows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-slate-500">Nenhum registro encontrado com os critérios de filtro selecionados.</td></tr>`;
-            } else {
-                rows.forEach(r => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-slate-800/50 transition duration-150';
-
-                    let badgeVeic = 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
-                    if (r.Veiculo === 'Moto') badgeVeic = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-                    else if (r.Veiculo === 'SUV / Pick-up') badgeVeic = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-                    else if (r.Veiculo === 'Utilitário / Pesado') badgeVeic = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-
-                    let badgeRegua = 'bg-rose-500/10 text-rose-300 border-rose-500/20';
-                    if (r.Regua === 'No dia') badgeRegua = 'bg-amber-500/10 text-amber-300 border-amber-500/20';
-                    else if (r.Regua === '5 dias depois') badgeRegua = 'bg-purple-500/10 text-purple-300 border-purple-500/20';
-
-                    tr.innerHTML = `
-                        <td class="py-2.5 px-3.5 font-mono text-[11px] text-slate-400">${r['Data e hora']}</td>
-                        <td class="py-2.5 px-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-semibold border ${badgeRegua}">${r.Regua || '2 dias antes'}</span></td>
-                        <td class="py-2.5 px-3.5"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">${r.Base}</span></td>
-                        <td class="py-2.5 px-3.5 font-semibold text-white">${r.Nome}</td>
-                        <td class="py-2.5 px-3.5 font-mono text-slate-400">${r.Telefone} <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 ml-1">DDD ${r.DDD}</span></td>
-                        <td class="py-2.5 px-3.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold border ${badgeVeic}">${r.Veiculo}</span></td>
-                        <td class="py-2.5 px-3.5 text-center font-mono text-emerald-400 font-semibold">${r['Número do boleto']}</td>
-                        <td class="py-2.5 px-3.5 text-right font-bold text-white font-mono">${r.Valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                        <td class="py-2.5 px-3.5 text-center font-medium text-amber-300 font-mono">${r['Vencimento Original']}</td>
-                        <td class="py-2.5 px-3.5 text-center">
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                <i data-lucide="check-check" class="w-2.5 h-2.5"></i> ${r.Obs || 'Enviado'}
-                            </span>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-
-            const totalPages = rowsPerPage === 'all' ? 1 : (Math.ceil(activeFilteredData.length / rowsPerPage) || 1);
-            document.getElementById('page-indicator').innerText = `${currentPage} / ${totalPages}`;
-            document.getElementById('table-pagination-info').innerText = `Mostrando ${activeFilteredData.length > 0 ? start + 1 : 0} a ${Math.min(end, activeFilteredData.length)} de ${activeFilteredData.length} registros`;
-            document.getElementById('btn-prev').disabled = currentPage <= 1;
-            document.getElementById('btn-next').disabled = currentPage >= totalPages;
-
-            lucide.createIcons();
-        }
-
-        function navigatePage(delta) {
-            const totalPages = rowsPerPage === 'all' ? 1 : (Math.ceil(activeFilteredData.length / rowsPerPage) || 1);
-            currentPage = Math.min(Math.max(1, currentPage + delta), totalPages);
+        function navigatePage(direction) {
+            currentPage += direction;
             renderTable();
         }
 
         function changeRowsPerPage(val) {
-            rowsPerPage = val === 'all' ? 'all' : (parseInt(val) || 10);
+            rowsPerPage = val;
             currentPage = 1;
             renderTable();
         }
@@ -1066,108 +935,51 @@
             document.getElementById('filter-val-min').value = '';
             document.getElementById('filter-val-max').value = '';
             document.getElementById('search-global').value = '';
-            if (dateRangePicker) dateRangePicker.clear();
+            if (flatpickrInstance) flatpickrInstance.clear();
             applyAllFilters();
         }
 
-        // =========================================================================
-        // FUNÇÃO DE GERAÇÃO DO RELATÓRIO EXECUTIVO EM PDF
-        // =========================================================================
         function generateExecutivePDF() {
-            const btn = document.getElementById('btn-pdf');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i> <span>Gerando PDF...</span>';
-            lucide.createIcons();
-
-            // Atualiza resumo de filtros no cabeçalho de impressão
-            const regua = document.getElementById('filter-regua').value;
-            const base = document.getElementById('filter-base').value;
-            const veic = document.getElementById('filter-veiculo').value;
-            const venc = document.getElementById('filter-vencimento').value;
-            
-            document.getElementById('pdf-filter-summary').innerText = `Filtros: Régua [${regua}] | Base [${base}] | Veículo [${veic}] | Vencimento [${venc}] | Total Registros: ${activeFilteredData.length}`;
             document.getElementById('pdf-emission-date').innerText = new Date().toLocaleString('pt-BR');
-
-            // Temporariamente exibir todas as linhas para PDF completo
-            const oldRowsPerPage = rowsPerPage;
-            rowsPerPage = 'all';
-            renderTable();
-
             const element = document.getElementById('printable-area');
-            const pdfHeader = document.getElementById('pdf-header-print');
-            pdfHeader.classList.remove('hidden');
-
-            const opt = {
-                margin: [10, 10, 10, 10],
-                filename: `Relatorio_Executivo_Aprovatt_${new Date().toISOString().slice(0,10)}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#070d1e' },
+            html2pdf().set({
+                margin: 8,
+                filename: `Relatorio_Aprovatt_${new Date().toISOString().slice(0,10)}.pdf`,
+                html2canvas: { scale: 2, backgroundColor: '#070d1e' },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-            };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                pdfHeader.classList.add('hidden');
-                rowsPerPage = oldRowsPerPage;
-                renderTable();
-                btn.innerHTML = originalContent;
-                lucide.createIcons();
-            }).catch(err => {
-                console.error('Erro ao gerar PDF com html2pdf:', err);
-                pdfHeader.classList.add('hidden');
-                rowsPerPage = oldRowsPerPage;
-                renderTable();
-                btn.innerHTML = originalContent;
-                lucide.createIcons();
-                window.print(); // Fallback para impressão nativa caso bloqueado
-            });
+            }).from(element).save();
         }
 
         function exportFilteredCSV() {
-            if (activeFilteredData.length === 0) {
-                alert('Nenhum dado para exportar!');
-                return;
-            }
-
-            const headers = ['Data_Hora_Envio', 'Regua', 'Base', 'Nome_Associado', 'Telefone', 'DDD', 'Tipo_Veiculo', 'Numero_Boleto', 'Valor_Boleto', 'Vencimento_Original', 'Status_Envio'];
-            const rows = activeFilteredData.map(r => [
-                `"${r['Data e hora']}"`,
-                `"${r.Regua || '2 dias antes'}"`,
-                `"${r.Base}"`,
-                `"${r.Nome}"`,
-                `"${r.Telefone}"`,
-                `"${r.DDD}"`,
-                `"${r.Veiculo}"`,
-                `"${r['Número do boleto']}"`,
-                r.Valor.toFixed(2),
-                `"${r['Vencimento Original']}"`,
-                `"${r.Obs}"`
+            const headers = ['Data_Hora', 'Regua', 'Base', 'Associado', 'Telefone', 'Veiculo', 'Boleto', 'Valor', 'Vencimento', 'Status'];
+            const rows = filteredData.map(r => [
+                `"${r['Data e hora'] || ''}"`,
+                `"${r.Regua || ''}"`,
+                `"${r.Base || ''}"`,
+                `"${r.Nome || r.Associado || ''}"`,
+                `"${r.Telefone || ''}"`,
+                `"${r.Veiculo || ''}"`,
+                `"${r['Número do boleto'] || r.Boleto || ''}"`,
+                (r.Valor || 0).toFixed(2),
+                `"${r['Vencimento Original'] || r['Vencimento'] || ''}"`,
+                `"${r.Obs || r.Status || ''}"`
             ]);
-
-            const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
-            const encodedUri = encodeURI(csvContent);
+            const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
             const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Aprovatt_Filtro_Automacoes_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
+            link.href = encodeURI(csvContent);
+            link.download = `Relatorio_Aprovatt_${new Date().toISOString().slice(0,10)}.csv`;
             link.click();
-            document.body.removeChild(link);
         }
 
-        // Inicialização
         window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-
-            // Configuração Flatpickr para Intervalo de Datas
-            dateRangePicker = flatpickr("#filter-data-range", {
+            flatpickrInstance = flatpickr("#filter-data-range", {
                 mode: "range",
                 dateFormat: "d/m/Y",
                 locale: "pt",
-                onChange: function() {
-                    applyAllFilters();
-                }
+                onChange: function() { applyAllFilters(); }
             });
 
-            fetchSheetData(false);
+            fetchSheetData();
         });
     </script>
 </body>
