@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprovatt • Painel Executivo da Diretoria (2026)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Flatpickr (Datepicker) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        },
+                        dark: {
+                            800: '#1e293b',
+                            850: '#151f32',
+                            900: '#0f172a',
+                            950: '#070d1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #070d1d; color: #f1f5f9; }
+        .glass-card {
+            background: rgba(21, 31, 50, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-card:hover { border-color: rgba(16, 185, 129, 0.3); }
+        .pulse-live {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #070d1d; }
+        ::-webkit-scrollbar-thumb { background: #26354f; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff !important; color: #000 !important; }
+            .glass-card { border: 1px solid #ccc !important; background: #fff !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+    <!-- Executive Header -->
+    <header class="border-b border-slate-800 bg-slate-950/90 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-emerald-500/25 ring-1 ring-emerald-400/40">
+                    <i data-lucide="shield-alert" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-lg font-bold tracking-tight text-white">Aprovatt • Painel da Diretoria Executiva</h1>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/30 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> MONITORAMENTO ESTRATÉGICO
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400">Visão Consolidada: Métricas da Régua de Cobrança & Atendimento Call Center</p>
+                </div>
+            </div>
+
+            <!-- Navegação de Módulos e Exportação -->
+            <div class="flex items-center space-x-2 text-xs">
+                <div class="bg-slate-900 border border-slate-700/80 p-1 rounded-xl flex items-center gap-1 mr-2">
+                    <button onclick="switchTab('cobranca')" id="btn-tab-cobranca" class="px-3 py-1.5 rounded-lg font-bold transition bg-emerald-600 text-white shadow">
+                        <i data-lucide="receipt" class="w-3.5 h-3.5 inline mr-1"></i> Régua de Cobrança
+                    </button>
+                    <button onclick="switchTab('callcenter')" id="btn-tab-callcenter" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">
+                        <i data-lucide="headphone-off" class="w-3.5 h-3.5 inline mr-1"></i> Call Center & CSAT
+                    </button>
+                </div>
+
+                <button onclick="generateExecutivePDF()" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3.5 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/25 transition">
+                    <i data-lucide="file-down" class="w-4 h-4"></i>
+                    <span>Exportar PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6" id="executive-container">
+
+        <!-- ========================================================================= -->
+        <!-- PAINEL DE DIRETORIA: INSIGHTS & DIRETRIZES ESTRATÉGICAS -->
+        <!-- ========================================================================= -->
+        <section class="glass-card rounded-2xl p-6 border-emerald-500/30 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-emerald-950/30">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-800/80 pb-3">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Diretrizes da Diretoria & Parecer Estratégico Operacional</h2>
+                        <p class="text-xs text-slate-400">Diagnóstico para tomada de decisão em Comitê de Gestão</p>
+                    </div>
+                </div>
+                <span class="text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-lg">
+                    Atualizado para Decisão I Semestre/2026
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs leading-relaxed">
+                <div class="bg-slate-850/90 rounded-xl p-4 border border-slate-700/60 space-y-2">
+                    <div class="flex items-center space-x-2 text-emerald-400 font-bold text-sm">
+                        <i data-lucide="trending-down" class="w-4 h-4"></i>
+                        <span>1. Redução de Custos de Inadimplência</span>
+                    </div>
+                    <p class="text-slate-300">
+                        A régua automatizada ($2$ dias antes do vencimento) atingiu um ticket médio de <strong>R$ 153,40</strong> por boleto. O acionamento preventivo reduziu o transbordo para os canais de cobrança ativa externa em $34\%$, preservando o fluxo de caixa.
+                    </p>
+                </div>
+
+                <div class="bg-slate-850/90 rounded-xl p-4 border border-slate-700/60 space-y-2">
+                    <div class="flex items-center space-x-2 text-cyan-400 font-bold text-sm">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        <span>2. Concentração da Capacidade da PA</span>
+                    </div>
+                    <p class="text-slate-300">
+                        $88,8\%$ das demandas concluídas estão concentradas em duas operadoras (<strong>Vitória Santana</strong> e <strong>Thayla Freitas</strong>). É necessário implantar um plano de distribuição de carga de trabalho e treinamento contínuo para mitigar o risco operacional.
+                    </p>
+                </div>
+
+                <div class="bg-slate-850/90 rounded-xl p-4 border border-slate-700/60 space-y-2">
+                    <div class="flex items-center space-x-2 text-amber-400 font-bold text-sm">
+                        <i data-lucide="split" class="w-4 h-4"></i>
+                        <span>3. Reconfiguração de Rotas ACD</span>
+                    </div>
+                    <p class="text-slate-300">
+                        Alta taxa de rejeição observada nos horários de pico ($09\text{h}$ - $12\text{h}$). A diretoria recomenda o ajuste do tempo de espera pré-transbordo no PABX/WhatsApp de $30\text{s}$ para $15\text{s}$ para elevar o First Call Resolution (FCR).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- MÓDULO 1: RÉGUA DE COBRANÇA E AUTOMAÇÃO DE BOLETOS -->
+        <!-- ========================================================================= -->
+        <div id="module-cobranca" class="space-y-6">
+            
+            <!-- Cards de Indicadores da Cobrança -->
+            <section class="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Boletos Filtrados</span>
+                    <div class="text-2xl font-extrabold text-white font-mono mt-1" id="cob-total-boletos">176</div>
+                    <span class="text-[11px] text-emerald-400 mt-1 font-medium">Cobertura Total da Base</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Montante Previsto</span>
+                    <div class="text-xl font-extrabold text-emerald-300 font-mono mt-1" id="cob-total-valor">R$ 26.998,40</div>
+                    <span class="text-[11px] text-slate-400 mt-1">Valor recuperável</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ticket Médio Geral</span>
+                    <div class="text-xl font-extrabold text-cyan-300 font-mono mt-1" id="cob-ticket-medio">R$ 153,40</div>
+                    <span class="text-[11px] text-slate-400 mt-1" id="cob-mediana">Mediana: R$ 144,90</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Limites Min / Max</span>
+                    <div class="text-xs font-bold text-white font-mono mt-1" id="cob-max-val">Max: R$ 372,64</div>
+                    <span class="text-[11px] text-slate-400 font-mono" id="cob-min-val">Min: R$ 42,90</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pico de Vencimento</span>
+                    <div class="text-lg font-extrabold text-amber-300 font-mono mt-1">10/08/2026</div>
+                    <span class="text-[11px] text-amber-400 font-medium">42 Boletos (23,8%)</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Região Predominante</span>
+                    <div class="text-lg font-extrabold text-purple-300 font-mono mt-1">DDD 75</div>
+                    <span class="text-[11px] text-slate-400">Bahia Interior (58%)</span>
+                </div>
+            </section>
+
+            <!-- Gráficos da Cobrança -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 glass-card rounded-2xl p-5">
+                    <h3 class="text-sm font-bold text-white mb-1">Volumetria e Financeiro por Vencimento</h3>
+                    <p class="text-xs text-slate-400 mb-4">Acompanhamento dos prazos de vencimento da régua preventiva</p>
+                    <div class="relative h-64">
+                        <canvas id="chartCobVencimentos"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5">
+                    <h3 class="text-sm font-bold text-white mb-1">Distribuição por Perfil de Veículo</h3>
+                    <p class="text-xs text-slate-400 mb-4">Composição de frota por categoria</p>
+                    <div class="relative h-64 flex items-center justify-center">
+                        <canvas id="chartCobVeiculos"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- MÓDULO 2: CALL CENTER, PRODUTIVIDADE & CSAT -->
+        <!-- ========================================================================= -->
+        <div id="module-callcenter" class="space-y-6 hidden">
+            
+            <!-- Cards de Indicadores de Atendimento -->
+            <section class="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Atendimentos Totais</span>
+                    <div class="text-2xl font-extrabold text-white font-mono mt-1">71.911</div>
+                    <span class="text-[11px] text-emerald-400 font-medium">+281,6% Jan-Jun</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Contatos Ativos</span>
+                    <div class="text-2xl font-extrabold text-cyan-300 font-mono mt-1">63.498</div>
+                    <span class="text-[11px] text-slate-400">88,3% da operação</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Contatos Receptivos</span>
+                    <div class="text-2xl font-extrabold text-indigo-300 font-mono mt-1">8.413</div>
+                    <span class="text-[11px] text-emerald-400 font-medium">Estabilizado</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">CSAT Consolidado</span>
+                    <div class="text-2xl font-extrabold text-emerald-400 font-mono mt-1">81,25%</div>
+                    <span class="text-[11px] text-emerald-400 font-medium">Meta (&gt;80%) Atingida</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Chamados Concluídos</span>
+                    <div class="text-2xl font-extrabold text-white font-mono mt-1">11.631</div>
+                    <span class="text-[11px] text-slate-400">88,8% Top 2 Agentes</span>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 flex flex-col justify-between">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">TMA Mediano (Atendimento)</span>
+                    <div class="text-2xl font-extrabold text-amber-300 font-mono mt-1">4,2 min</div>
+                    <span class="text-[11px] text-slate-400">Tempo de Resposta Ideal</span>
+                </div>
+            </section>
+
+            <!-- Gráficos de Call Center -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-card rounded-2xl p-5">
+                    <h3 class="text-sm font-bold text-white mb-1">Produtividade do Time (Finalizados vs Rejeitados)</h3>
+                    <p class="text-xs text-slate-400 mb-4">Volume gerenciado por operador</p>
+                    <div class="relative h-60">
+                        <canvas id="chartCCAtendentes"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5">
+                    <h3 class="text-sm font-bold text-white mb-1">Evolução de CSAT (Jan a Jun)</h3>
+                    <p class="text-xs text-slate-400 mb-4">Acompanhamento do indicador com meta corporativa em 80%</p>
+                    <div class="relative h-60">
+                        <canvas id="chartCCCSAT"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500 no-print">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            <div>Aprovatt • Painel Unificado para Hospedagem Executiva Vercel</div>
+            <div class="text-slate-400">Plataforma Auditada • 2026</div>
+        </div>
+    </footer>
+
+    <!-- LÓGICA DE DADOS E RENDERIZAÇÃO -->
+    <script>
+        // Dados de Call Center
+        const semestralData = [
+            {"mes_curto": "Jan", "ativos": 5063, "receptivos": 1276, "total": 6339, "csat": 82.2},
+            {"mes_curto": "Fev", "ativos": 7007, "receptivos": 1138, "total": 8145, "csat": 78.4},
+            {"mes_curto": "Mar", "ativos": 8289, "receptivos": 1403, "total": 9692, "csat": 83.3},
+            {"mes_curto": "Abr", "ativos": 9678, "receptivos": 1560, "total": 11238, "csat": 78.4},
+            {"mes_curto": "Mai", "ativos": 10797, "receptivos": 1509, "total": 12306, "csat": 85.6},
+            {"mes_curto": "Jun", "ativos": 22664, "receptivos": 1527, "total": 24191, "csat": 78.6}
+        ];
+
+        const agentsData = [
+            {"atendente": "Vitória Santana", "finalizados": 6489, "rejeitados": 3808},
+            {"atendente": "Thayla Freitas", "finalizados": 3838, "rejeitados": 2208},
+            {"atendente": "Ana Santos", "finalizados": 833, "rejeitados": 5991},
+            {"atendente": "Clarissa Müller", "finalizados": 218, "rejeitados": 1188},
+            {"atendente": "Davi Barros", "finalizados": 59, "rejeitados": 265}
+        ];
+
+        // Instâncias de Gráficos
+        let chartCobV = null;
+        let chartCobVeic = null;
+        let chartCCA = null;
+        let chartCCCSAT = null;
+
+        function switchTab(tab) {
+            const btnCob = document.getElementById('btn-tab-cobranca');
+            const btnCC = document.getElementById('btn-tab-callcenter');
+            const modCob = document.getElementById('module-cobranca');
+            const modCC = document.getElementById('module-callcenter');
+
+            if (tab === 'cobranca') {
+                btnCob.className = "px-3 py-1.5 rounded-lg font-bold transition bg-emerald-600 text-white shadow";
+                btnCC.className = "px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+                modCob.classList.remove('hidden');
+                modCC.classList.add('hidden');
+            } else {
+                btnCC.className = "px-3 py-1.5 rounded-lg font-bold transition bg-emerald-600 text-white shadow";
+                btnCob.className = "px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+                modCC.classList.remove('hidden');
+                modCob.classList.add('hidden');
+                renderCCCharts();
+            }
+        }
+
+        function renderCobCharts() {
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
+
+            // Chart Cobrança - Vencimentos
+            const ctxV = document.getElementById('chartCobVencimentos').getContext('2d');
+            if (chartCobV) chartCobV.destroy();
+            chartCobV = new Chart(ctxV, {
+                type: 'bar',
+                data: {
+                    labels: ['20/07', '28/07', '30/07', '10/08', '20/08'],
+                    datasets: [{
+                        label: 'Qtd Boletos',
+                        data: [28, 14, 12, 42, 22],
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Chart Cobrança - Veículos
+            const ctxVeic = document.getElementById('chartCobVeiculos').getContext('2d');
+            if (chartCobVeic) chartCobVeic.destroy();
+            chartCobVeic = new Chart(ctxVeic, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Moto', 'Carro Passeio', 'SUV / Pick-up', 'Utilitário / Pesado'],
+                    datasets: [{
+                        data: [22, 84, 52, 18],
+                        backgroundColor: ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function renderCCCharts() {
+            // Chart Call Center - Atendentes
+            const ctxA = document.getElementById('chartCCAtendentes').getContext('2d');
+            if (chartCCA) chartCCA.destroy();
+            chartCCA = new Chart(ctxA, {
+                type: 'bar',
+                data: {
+                    labels: agentsData.map(a => a.atendente),
+                    datasets: [
+                        { label: 'Finalizados', data: agentsData.map(a => a.finalizados), backgroundColor: '#10b981', borderRadius: 4 },
+                        { label: 'Rejeitados', data: agentsData.map(a => a.rejeitados), backgroundColor: '#f43f5e', borderRadius: 4 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Chart Call Center - CSAT
+            const ctxC = document.getElementById('chartCCCSAT').getContext('2d');
+            if (chartCCCSAT) chartCCCSAT.destroy();
+            chartCCCSAT = new Chart(ctxC, {
+                type: 'line',
+                data: {
+                    labels: semestralData.map(s => s.mes_curto),
+                    datasets: [
+                        { label: 'CSAT Real (%)', data: semestralData.map(s => s.csat), borderColor: '#38bdf8', tension: 0.3, fill: false },
+                        { label: 'Meta (80%)', data: [80,80,80,80,80,80], borderColor: '#ef4444', borderDash: [5,5], fill: false }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function generateExecutivePDF() {
+            const element = document.getElementById('executive-container');
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: `Aprovatt_Relatorio_Diretoria_${new Date().toISOString().slice(0,10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: '#070d1d' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderCobCharts();
+        });
+    </script>
+</body>
+</html>
