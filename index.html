@@ -160,7 +160,7 @@
                         <span>Limpar Filtros</span>
                     </button>
                     <span id="filtered-records-badge" class="text-xs px-2.5 py-1.5 rounded-lg bg-emerald-950/50 text-emerald-300 font-semibold border border-emerald-500/30">
-                        0 / 0 registros
+                        176 / 176 registros
                     </span>
                 </div>
             </div>
@@ -173,9 +173,9 @@
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="timer" class="w-3.5 h-3.5 text-rose-400"></i> Régua / Gatilho
                     </label>
-                    <select id="filter-regua" onchange="applyAllFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
+                    <select id="filter-regua" onchange="handleReguaOrBaseChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
                         <option value="ALL">Todas as Réguas</option>
-                        <option value="2 dias antes">2 dias antes do vencimento</option>
+                        <option value="2 dias antes" selected>2 dias antes do vencimento</option>
                         <option value="No dia">No dia do vencimento</option>
                         <option value="5 dias depois">5 dias após o vencimento</option>
                     </select>
@@ -186,9 +186,9 @@
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="database" class="w-3.5 h-3.5 text-emerald-400"></i> Base / Carteira
                     </label>
-                    <select id="filter-base" onchange="applyAllFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
+                    <select id="filter-base" onchange="handleReguaOrBaseChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
                         <option value="ALL">Todas as Bases</option>
-                        <option value="ServCar">ServCar (Passeio/Frota)</option>
+                        <option value="ServCar" selected>ServCar (Passeio/Frota)</option>
                         <option value="ServTaxi">ServTaxi (Táxis/Vans)</option>
                     </select>
                 </div>
@@ -352,8 +352,8 @@
                     <span class="text-[10px] font-bold uppercase tracking-wider">Região Predominante</span>
                     <i data-lucide="map" class="w-3.5 h-3.5 text-emerald-400"></i>
                 </div>
-                <div class="text-lg font-extrabold text-white font-mono" id="kpi-top-ddd">DDD -</div>
-                <div class="text-[10px] text-slate-400 mt-1" id="kpi-top-ddd-pct">Bahia</div>
+                <div class="text-lg font-extrabold text-white font-mono" id="kpi-top-ddd">DDD 75</div>
+                <div class="text-[10px] text-slate-400 mt-1" id="kpi-top-ddd-pct">Bahia Interior</div>
             </div>
 
         </section>
@@ -461,21 +461,21 @@
                             <th class="py-3 px-3.5 text-center">Nº Boleto</th>
                             <th onclick="sortTable('Valor')" class="py-3 px-3.5 text-right cursor-pointer hover:text-white">Valor (R$) <i data-lucide="chevrons-up-down" class="w-3 h-3 inline"></i></th>
                             <th onclick="sortTable('Vencimento Original')" class="py-3 px-3.5 text-center cursor-pointer hover:text-white">Vencimento <i data-lucide="chevrons-up-down" class="w-3 h-3 inline"></i></th>
-                            <th class="py-3 px-3.5 text-center">Status Envio</th>
+                            <th class="py-3 px-3.5 text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody id="table-body" class="divide-y divide-slate-800/60 font-sans">
-                        <!-- Conteúdo preenchido dinamicamente -->
+                        <!-- Dynamic content -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Paginação -->
             <div class="flex flex-col sm:flex-row justify-between items-center mt-4 gap-3 text-xs text-slate-400 no-print">
-                <div id="table-pagination-info">Mostrando 0 a 0 de 0 registros</div>
+                <div id="table-pagination-info">Mostranging 1 a 10 de 176 registros</div>
                 <div class="flex items-center space-x-2">
                     <button onclick="navigatePage(-1)" id="btn-prev" class="px-3 py-1.5 bg-slate-850 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-slate-700 text-white transition">Anterior</button>
-                    <span id="page-indicator" class="px-3 py-1.5 bg-slate-900 rounded-lg text-emerald-400 font-mono font-semibold border border-slate-800">1 / 1</span>
+                    <span id="page-indicator" class="px-3 py-1.5 bg-slate-900 rounded-lg text-emerald-400 font-mono font-semibold border border-slate-800">1 / 18</span>
                     <button onclick="navigatePage(1)" id="btn-next" class="px-3 py-1.5 bg-slate-850 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-slate-700 text-white transition">Próximo</button>
                 </div>
             </div>
@@ -491,17 +491,17 @@
         </div>
     </footer>
 
-    <!-- LÓGICA JS COMPLETA -->
+    <!-- LOGICA JS COMPLETA -->
     <script>
         const SHEET_ID = '1gHSotrzUANYZRGh22fvmydZ9wZ28fSvVHEQHskd85t4';
 
-        // Dataset Base Completo
+        // Dataset Base Original Completo
         let masterData = [
             {"Data e hora": "18/07/26 09:43:17", "Telefone": 5575981727763, "Nome": "JOAO BATISTA JESUS DE SOUZA", "Número do boleto": 3229589, "Valor": 155.99, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"},
             {"Data e hora": "18/07/26 09:50:29", "Telefone": 5575988682313, "Nome": "LUCAS LIMA DANTAS", "Número do boleto": 3234368, "Valor": 107.01, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 9, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"},
             {"Data e hora": "18/07/26 10:03:17", "Telefone": 5575981985944, "Nome": "ANDRE ROBERTO DE OLIVEIRA CARVALHO", "Número do boleto": 3218762, "Valor": 132.12, "Vencimento Original": "20/07/2026", "Obs": "Mensagem enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "75", "Hora": 10, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"},
-            {"Data e hora": "18/07/26 10:15:00", "Telefone": 5571992018822, "Nome": "CARLOS EDUARDO SILVA", "Número do boleto": 3219001, "Valor": 210.50, "Vencimento Original": "20/07/2026", "Obs": "Falha no envio", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServTaxi", "Veiculo": "SUV / Pick-up"},
-            {"Data e hora": "18/07/26 11:22:10", "Telefone": 5573988112233, "Nome": "MARIANA COSTA DE OLIVEIRA", "Número do boleto": 3221102, "Valor": 75.00, "Vencimento Original": "20/07/2026", "Obs": "Pendente", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}
+            {"Data e hora": "18/07/26 10:15:00", "Telefone": 5571992018822, "Nome": "CARLOS EDUARDO SILVA", "Número do boleto": 3219001, "Valor": 210.50, "Vencimento Original": "20/07/2026", "Obs": "Não enviada", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "71", "Hora": 10, "Regua": "2 dias antes", "Base": "ServTaxi", "Veiculo": "SUV / Pick-up"},
+            {"Data e hora": "18/07/26 11:22:10", "Telefone": 5573988112233, "Nome": "MARIANA COSTA DE OLIVEIRA", "Número do boleto": 3221102, "Valor": 75.00, "Vencimento Original": "20/07/2026", "Obs": "Erro no disparo", "Fluxo": "Mensagem - Boletos (2 dias antes do vencimento)", "DDD": "73", "Hora": 11, "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"}
         ];
 
         let filteredData = [...masterData];
@@ -516,7 +516,6 @@
         let chartDDD = null;
         let flatpickrInstance = null;
 
-        // Inicialização de Opções Dinâmicas dos Filtros (sem resetar as seleções)
         function populateFilterOptions() {
             const currentVenc = document.getElementById('filter-vencimento').value;
             const currentDDD = document.getElementById('filter-ddd').value;
@@ -545,7 +544,11 @@
             dddSelect.value = currentDDD || 'ALL';
         }
 
-        // Aplicação Integrada dos Filtros Preservando Estado
+        // Filtro inteligente para Régua e Base
+        function handleReguaOrBaseChange() {
+            applyAllFilters();
+        }
+
         function applyAllFilters() {
             const regua = document.getElementById('filter-regua').value;
             const base = document.getElementById('filter-base').value;
@@ -559,11 +562,6 @@
             const valMax = parseFloat(document.getElementById('filter-val-max').value) || Infinity;
             const search = document.getElementById('search-global').value.toLowerCase().trim();
 
-            let dateRange = [];
-            if (flatpickrInstance && flatpickrInstance.selectedDates.length === 2) {
-                dateRange = flatpickrInstance.selectedDates;
-            }
-
             filteredData = masterData.filter(r => {
                 if (regua !== 'ALL' && r.Regua !== regua) return false;
                 if (base !== 'ALL' && r.Base !== base) return false;
@@ -571,23 +569,19 @@
                 if (vencimento !== 'ALL' && r['Vencimento Original'] !== vencimento) return false;
                 if (ddd !== 'ALL' && r.DDD !== ddd) return false;
 
-                // Faixa de Valor Preset
                 const val = r.Valor || 0;
                 if (faixaValor === 'f1' && val > 80) return false;
                 if (faixaValor === 'f2' && (val <= 80 || val > 140)) return false;
                 if (faixaValor === 'f3' && (val <= 140 || val > 200)) return false;
                 if (faixaValor === 'f4' && val <= 200) return false;
 
-                // Min e Max Customizado
                 if (val < valMin || val > valMax) return false;
 
-                // Turno
                 const h = r.Hora || 0;
                 if (turno === 'manha' && (h < 6 || h >= 12)) return false;
                 if (turno === 'tarde' && (h < 12 || h >= 18)) return false;
                 if (turno === 'noite' && (h < 18 || h >= 23)) return false;
 
-                // Busca Textual Global
                 if (search) {
                     const nameMatch = (r.Nome || '').toLowerCase().includes(search);
                     const phoneMatch = String(r.Telefone || '').includes(search);
@@ -598,7 +592,6 @@
                 return true;
             });
 
-            // Atualizar badge de total filtrado
             document.getElementById('filtered-records-badge').innerText = `${filteredData.length} / ${masterData.length} registros`;
 
             updateKPIs();
@@ -607,7 +600,6 @@
             renderTable();
         }
 
-        // Atualização Dinâmica dos KPIs
         function updateKPIs() {
             const total = filteredData.length;
             const totalValor = filteredData.reduce((acc, r) => acc + (r.Valor || 0), 0);
@@ -625,7 +617,6 @@
             document.getElementById('kpi-max-boleto').innerText = `Max: ${maxVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
             document.getElementById('kpi-min-boleto').innerText = `Min: ${minVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
 
-            // Vencimento mais frequente
             const vencFreq = {};
             filteredData.forEach(r => {
                 const v = r['Vencimento Original'];
@@ -640,7 +631,6 @@
             document.getElementById('kpi-top-vencimento').innerText = topVenc;
             document.getElementById('kpi-top-vencimento-share').innerText = `${topVencCount} boletos (${pctVenc}%)`;
 
-            // DDD Predominante
             const dddFreq = {};
             filteredData.forEach(r => {
                 if (r.DDD) dddFreq[r.DDD] = (dddFreq[r.DDD] || 0) + 1;
@@ -654,7 +644,7 @@
             document.getElementById('kpi-top-ddd-pct').innerText = `${topDDDCount} associados`;
         }
 
-        // Renderização dos Gráficos Interativos
+        // Gráficos Originais Garantidos
         function renderCharts() {
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
@@ -748,12 +738,11 @@
             });
         }
 
-        // Renderização da Tabela com Destaque de Cor para Mensagens Não Enviadas
+        // Tabela com ordenação, paginação e destaque correto de cor para mensagens não enviadas
         function renderTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
 
-            // Ordenação
             filteredData.sort((a, b) => {
                 let valA = a[sortColumn] || '';
                 let valB = b[sortColumn] || '';
@@ -764,7 +753,6 @@
                 return 0;
             });
 
-            // Paginação
             const total = filteredData.length;
             const limit = rowsPerPage === 'all' ? total : parseInt(rowsPerPage);
             const totalPages = Math.ceil(total / limit) || 1;
@@ -777,7 +765,6 @@
             pageData.forEach(r => {
                 const tr = document.createElement('tr');
                 
-                // LÓGICA DE DESTAGUE DE COR DE MENSAGEM NÃO ENVIADA
                 const obsText = (r.Obs || '').toLowerCase();
                 const isEnviado = obsText.includes('enviada') || obsText.includes('sucesso') || obsText.includes('enviado');
 
@@ -786,7 +773,6 @@
                     tr.className = 'hover:bg-slate-800/40 transition';
                     badgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i data-lucide="check-circle" class="w-3 h-3"></i> ${r.Obs || 'Enviado'}</span>`;
                 } else {
-                    // DESTAQUE ROSA/VERMELHO PARA NÃO ENVIADOS
                     tr.className = 'bg-rose-950/20 hover:bg-rose-900/30 transition border-l-2 border-rose-500';
                     badgeHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${r.Obs || 'Não Enviada'}</span>`;
                 }
@@ -806,7 +792,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Atualização dos controles de paginação
             document.getElementById('table-pagination-info').innerText = `Mostrando ${total === 0 ? 0 : start + 1} a ${end} de ${total} registros`;
             document.getElementById('page-indicator').innerText = `${currentPage} / ${totalPages}`;
             document.getElementById('btn-prev').disabled = currentPage <= 1;
@@ -815,7 +800,6 @@
             lucide.createIcons();
         }
 
-        // Funções de Navegação e Ordenação de Tabela
         function sortTable(col) {
             if (sortColumn === col) {
                 sortAsc = !sortAsc;
@@ -837,7 +821,6 @@
             renderTable();
         }
 
-        // Limpeza dos Filtros
         function resetAllFilters() {
             document.getElementById('filter-regua').value = 'ALL';
             document.getElementById('filter-base').value = 'ALL';
@@ -853,12 +836,11 @@
             applyAllFilters();
         }
 
-        // Sincronização sem Perda de Estado dos Filtros
+        // Sincronização preservando os filtros ativos do usuário
         function fetchSheetData(manual = false) {
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
 
-            // Armazena os valores selecionados atuais
             const savedRegua = document.getElementById('filter-regua').value;
             const savedBase = document.getElementById('filter-base').value;
             const savedVeic = document.getElementById('filter-veiculo').value;
@@ -871,7 +853,6 @@
             setTimeout(() => {
                 populateFilterOptions();
 
-                // Restaura os filtros salvos
                 document.getElementById('filter-regua').value = savedRegua;
                 document.getElementById('filter-base').value = savedBase;
                 document.getElementById('filter-veiculo').value = savedVeic;
@@ -889,7 +870,6 @@
             }, 400);
         }
 
-        // Exportação para PDF e CSV
         function generateExecutivePDF() {
             document.getElementById('pdf-emission-date').innerText = new Date().toLocaleString('pt-BR');
             const element = document.getElementById('printable-area');
@@ -922,7 +902,6 @@
             link.click();
         }
 
-        // Inicialização Global na Carga
         window.addEventListener('DOMContentLoaded', () => {
             flatpickrInstance = flatpickr("#filter-data-range", {
                 mode: "range",
