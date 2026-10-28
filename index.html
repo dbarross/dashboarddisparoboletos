@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprovatt • Painel Executivo Integrado</title>
+    <title>Aprovatt • Painel Executivo de Automações & Call Center</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -328,7 +328,6 @@
                             <th class="py-3 px-3.5 text-center">Nº Boleto</th>
                             <th class="py-3 px-3.5 text-right">Valor (R$)</th>
                             <th class="py-3 px-3.5 text-center">Vencimento</th>
-                            <th class="py-3 px-3.5 text-center">Status Envio</th>
                         </tr>
                     </thead>
                     <tbody id="table-body" class="divide-y divide-slate-800/60 font-sans">
@@ -348,43 +347,18 @@
     <script>
         const SHEET_ID = '1gHSotrzUANYZRGh22fvmydZ9wZ28fSvVHEQHskd85t4';
         
-        // Exemplo com registros mistos (alguns enviados, outros com falha/não enviados para teste de cor)
         let masterData = [
-            {"Data e hora": "18/07/26 09:43:17", "Telefone": "5575981727763", "Nome": "JOAO BATISTA JESUS DE SOUZA", "Número do boleto": "3229589", "Valor": 155.99, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio", "Obs": "Mensagem enviada"},
-            {"Data e hora": "18/07/26 09:50:29", "Telefone": "5575988682313", "Nome": "LUCAS LIMA DANTAS", "Número do boleto": "3234368", "Valor": 107.01, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio", "Obs": "Não enviada"},
-            {"Data e hora": "18/07/26 10:03:17", "Telefone": "5575981985944", "Nome": "ANDRE ROBERTO DE OLIVEIRA CARVALHO", "Número do boleto": "3218762", "Valor": 132.12, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio", "Obs": "Mensagem enviada"},
-            {"Data e hora": "18/07/26 10:27:22", "Telefone": "5575983417309", "Nome": "AMANDA DA SILVA XAVIER", "Número do boleto": "3218249", "Valor": 176.22, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up", "Obs": "Erro no disparo"},
-            {"Data e hora": "18/07/26 10:34:37", "Telefone": "5575999960420", "Nome": "ALEXANDRE LIMA VIANA", "Número do boleto": "3244674", "Valor": 42.90, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto", "Obs": "Mensagem enviada"},
-            {"Data e hora": "18/07/26 10:47:10", "Telefone": "5571991335905", "Nome": "EVANDRO BISPO DE SINO", "Número do boleto": "3254815", "Valor": 262.62, "Vencimento Original": "20/07/2026", "DDD": "71", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado", "Obs": "Pendente"}
+            {"Data e hora": "18/07/26 09:43:17", "Telefone": "5575981727763", "Nome": "JOAO BATISTA JESUS DE SOUZA", "Número do boleto": "3229589", "Valor": 155.99, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"},
+            {"Data e hora": "18/07/26 09:50:29", "Telefone": "5575988682313", "Nome": "LUCAS LIMA DANTAS", "Número do boleto": "3234368", "Valor": 107.01, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"},
+            {"Data e hora": "18/07/26 10:03:17", "Telefone": "5575981985944", "Nome": "ANDRE ROBERTO DE OLIVEIRA CARVALHO", "Número do boleto": "3218762", "Valor": 132.12, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Carro Passeio"},
+            {"Data e hora": "18/07/26 10:27:22", "Telefone": "5575983417309", "Nome": "AMANDA DA SILVA XAVIER", "Número do boleto": "3218249", "Valor": 176.22, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "SUV / Pick-up"},
+            {"Data e hora": "18/07/26 10:34:37", "Telefone": "5575999960420", "Nome": "ALEXANDRE LIMA VIANA", "Número do boleto": "3244674", "Valor": 42.90, "Vencimento Original": "20/07/2026", "DDD": "75", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Moto"},
+            {"Data e hora": "18/07/26 10:47:10", "Telefone": "5571991335905", "Nome": "EVANDRO BISPO DE SINO", "Número do boleto": "3254815", "Valor": 262.62, "Vencimento Original": "20/07/2026", "DDD": "71", "Regua": "2 dias antes", "Base": "ServCar", "Veiculo": "Utilitário / Pesado"}
         ];
 
         let filteredData = [...masterData];
         let chartVenc = null;
         let chartVeic = null;
-
-        function fetchSheetData(manual = false) {
-            const icon = document.getElementById('refresh-icon');
-            if (icon) icon.classList.add('animate-spin');
-
-            // Preserva os valores atuais dos filtros para que não sejam limpos no refresh
-            const currentRegua = document.getElementById('filter-regua').value;
-            const currentBase = document.getElementById('filter-base').value;
-            const currentVeic = document.getElementById('filter-veiculo').value;
-            const currentDDD = document.getElementById('filter-ddd').value;
-            const currentSearch = document.getElementById('search-global').value;
-
-            setTimeout(() => {
-                // Simulação de re-aplicação pós-fetch mantendo estados
-                document.getElementById('filter-regua').value = currentRegua;
-                document.getElementById('filter-base').value = currentBase;
-                document.getElementById('filter-veiculo').value = currentVeic;
-                document.getElementById('filter-ddd').value = currentDDD;
-                document.getElementById('search-global').value = currentSearch;
-
-                if (icon) icon.classList.remove('animate-spin');
-                applyAllFilters();
-            }, 600);
-        }
 
         function applyAllFilters() {
             const regua = document.getElementById('filter-regua').value;
@@ -422,6 +396,7 @@
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
 
+            // Chart 1: Vencimentos
             const vencMap = {};
             filteredData.forEach(r => {
                 vencMap[r['Vencimento Original']] = (vencMap[r['Vencimento Original']] || 0) + r.Valor;
@@ -443,6 +418,7 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
+            // Chart 2: Veículos
             const veicMap = { 'Moto': 0, 'Carro Passeio': 0, 'SUV / Pick-up': 0, 'Utilitário / Pesado': 0 };
             filteredData.forEach(r => { if (veicMap[r.Veiculo] !== undefined) veicMap[r.Veiculo]++; });
 
@@ -468,16 +444,6 @@
             filteredData.forEach(r => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-800/40 transition';
-
-                // Lógica de cores baseada no status de envio
-                const obsText = (r.Obs || '').toLowerCase();
-                let statusBadge = '';
-                if (obsText.includes('enviada') || obsText.includes('sucesso') || obsText.includes('enviado')) {
-                    statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i data-lucide="check-check" class="w-3 h-3"></i> ${r.Obs}</span>`;
-                } else {
-                    statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/40"><i data-lucide="alert-circle" class="w-3 h-3"></i> ${r.Obs || 'Não enviada'}</span>`;
-                }
-
                 tr.innerHTML = `
                     <td class="py-2.5 px-3.5 font-mono text-slate-400">${r['Data e hora']}</td>
                     <td class="py-2.5 px-3.5 font-semibold text-rose-300">${r.Regua}</td>
@@ -488,7 +454,6 @@
                     <td class="py-2.5 px-3.5 text-center font-mono text-emerald-400">${r['Número do boleto']}</td>
                     <td class="py-2.5 px-3.5 text-right font-mono font-bold text-white">${r.Valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                     <td class="py-2.5 px-3.5 text-center font-mono text-amber-300">${r['Vencimento Original']}</td>
-                    <td class="py-2.5 px-3.5 text-center">${statusBadge}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -515,9 +480,9 @@
         }
 
         function exportFilteredCSV() {
-            const headers = ['Data_Hora', 'Regua', 'Base', 'Associado', 'Telefone', 'Veiculo', 'Boleto', 'Valor', 'Vencimento', 'Status'];
+            const headers = ['Data_Hora', 'Regua', 'Base', 'Associado', 'Telefone', 'Veiculo', 'Boleto', 'Valor', 'Vencimento'];
             const rows = filteredData.map(r => [
-                `"${r['Data e hora']}"`, `"${r.Regua}"`, `"${r.Base}"`, `"${r.Nome}"`, `"${r.Telefone}"`, `"${r.Veiculo}"`, `"${r['Número do boleto']}"`, r.Valor.toFixed(2), `"${r['Vencimento Original']}"`, `"${r.Obs}"`
+                `"${r['Data e hora']}"`, `"${r.Regua}"`, `"${r.Base}"`, `"${r.Nome}"`, `"${r.Telefone}"`, `"${r.Veiculo}"`, `"${r['Número do boleto']}"`, r.Valor.toFixed(2), `"${r['Vencimento Original']}"`
             ]);
             const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
             const link = document.createElement('a');
