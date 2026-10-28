@@ -70,13 +70,11 @@
             70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
             100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
-        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0b1329; }
         ::-webkit-scrollbar-thumb { background: #26354f; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-        /* Print / PDF Styling */
         @media print {
             body { background-color: #FFFFFF !important; color: #1e293b !important; }
             header, section#filtros-section, footer, .no-print { display: none !important; }
@@ -119,7 +117,6 @@
                     <span>Sincronizar</span>
                 </button>
 
-                <!-- BOTÃO PRINCIPAL: GERAR RELATÓRIO EXECUTIVO EM PDF -->
                 <button onclick="generateExecutivePDF()" id="btn-pdf" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3.5 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/30 transition duration-200">
                     <i data-lucide="file-down" class="w-4 h-4 text-white"></i>
                     <span>Relatório PDF</span>
@@ -168,7 +165,6 @@
             <!-- Grid de Filtros (7 Dimensões) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
                 
-                <!-- 1. Filtro: Momento da Régua -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="timer" class="w-3.5 h-3.5 text-rose-400"></i> Régua / Gatilho
@@ -181,7 +177,6 @@
                     </select>
                 </div>
 
-                <!-- 2. Filtro: Base Operacional -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="database" class="w-3.5 h-3.5 text-emerald-400"></i> Base / Carteira
@@ -193,7 +188,6 @@
                     </select>
                 </div>
 
-                <!-- 3. Filtro: Tipo de Veículo -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="car" class="w-3.5 h-3.5 text-cyan-400"></i> Tipo de Veículo
@@ -207,7 +201,6 @@
                     </select>
                 </div>
 
-                <!-- 4. Filtro: Data de Vencimento -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> Vencimento
@@ -217,7 +210,6 @@
                     </select>
                 </div>
 
-                <!-- 5. Filtro: Faixa de Valor (R$) -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="badge-dollar-sign" class="w-3.5 h-3.5 text-emerald-400"></i> Faixa de Valor
@@ -231,7 +223,6 @@
                     </select>
                 </div>
 
-                <!-- 6. Filtro: Região / DDD -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-purple-400"></i> Região / DDD
@@ -241,7 +232,6 @@
                     </select>
                 </div>
 
-                <!-- 7. Filtro: Turno do Disparo -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="clock" class="w-3.5 h-3.5 text-pink-400"></i> Turno Disparo
@@ -256,9 +246,8 @@
 
             </div>
 
-            <!-- Segunda linha de filtros: Intervalo de Datas e Busca Global -->
+            <!-- Segunda linha de filtros -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 pt-3 border-t border-slate-800/60 text-xs">
-                <!-- Data de Envio (Intervalo) -->
                 <div class="flex items-center gap-2">
                     <label class="font-semibold text-slate-300 whitespace-nowrap flex items-center gap-1">
                         <i data-lucide="calendar-range" class="w-3.5 h-3.5 text-indigo-400"></i> Período Envio:
@@ -266,7 +255,6 @@
                     <input type="text" id="filter-data-range" placeholder="Selecione o intervalo..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-mono">
                 </div>
 
-                <!-- Faixa Customizada Min/Max -->
                 <div class="flex items-center gap-2">
                     <label class="font-semibold text-slate-300 whitespace-nowrap">Valor R$ Min/Max:</label>
                     <input type="number" id="filter-val-min" oninput="applyAllFilters()" placeholder="Min" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-mono">
@@ -274,7 +262,6 @@
                     <input type="number" id="filter-val-max" oninput="applyAllFilters()" placeholder="Max" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-mono">
                 </div>
 
-                <!-- Busca Textual Global -->
                 <div class="relative">
                     <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400"></i>
                     <input type="text" id="search-global" oninput="applyAllFilters()" placeholder="Pesquisar por Associado, Boleto, Telefone..." class="w-full pl-9 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-xs">
@@ -360,7 +347,6 @@
 
         <!-- GRÁFICOS INTERATIVOS DINÂMICOS -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <!-- Gráfico 1: Vencimentos x Valor -->
             <div class="lg:col-span-2 glass-panel rounded-2xl p-5 flex flex-col justify-between">
                 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
                     <div>
@@ -376,7 +362,6 @@
                 </div>
             </div>
 
-            <!-- Gráfico 2: Distribuição por Tipo de Veículo -->
             <div class="glass-panel rounded-2xl p-5 flex flex-col justify-between">
                 <div class="mb-3">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -392,7 +377,6 @@
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <!-- Gráfico 3: Horários de Envio -->
             <div class="glass-panel rounded-2xl p-5">
                 <div class="flex justify-between items-center mb-3">
                     <div>
@@ -408,7 +392,6 @@
                 </div>
             </div>
 
-            <!-- Gráfico 4: Distribuição por DDD -->
             <div class="glass-panel rounded-2xl p-5">
                 <div class="flex justify-between items-center mb-3">
                     <div>
@@ -425,7 +408,7 @@
             </div>
         </section>
 
-        <!-- TABELA ANALÍTICA DINÂMICA COM ORDENAÇÃO E PAGINAÇÃO -->
+        <!-- TABELA ANALÍTICA DINÂMICA -->
         <section class="glass-panel rounded-2xl p-5">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                 <div>
@@ -491,7 +474,7 @@
         </div>
     </footer>
 
-    <!-- LÓGICA JS INTEGRADA COM GOOGLE SHEETS E PRESERVAÇÃO DE FILTROS -->
+    <!-- LÓGICA JS COM CORREÇÃO ROBUSTA DE LEITURA DE COLUNAS E VALORES -->
     <script>
         const SHEET_ID = '1gHSotrzUANYZRGh22fvmydZ9wZ28fSvVHEQHskd85t4';
 
@@ -508,7 +491,6 @@
         let chartDDD = null;
         let flatpickrInstance = null;
 
-        // Leitura em tempo real do Google Sheets via API GViz
         async function fetchSheetData(manual = false) {
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
@@ -528,10 +510,8 @@
                 const csvText = await response.text();
 
                 masterData = parseCSVData(csvText);
-
                 populateFilterOptions();
 
-                // Restaura os filtros selecionados pelo usuário
                 document.getElementById('filter-regua').value = savedRegua || 'ALL';
                 document.getElementById('filter-base').value = savedBase || 'ALL';
                 document.getElementById('filter-veiculo').value = savedVeic || 'ALL';
@@ -552,7 +532,7 @@
             }
         }
 
-        // Conversor flexível de CSV vindo do Google Sheets
+        // Conversor CSV blindado para mapear corretamente independentemente de maiúsculas/minúsculas ou acentos
         function parseCSVData(csv) {
             const lines = csv.split('\n').filter(l => l.trim() !== '');
             if (lines.length < 2) return [];
@@ -562,60 +542,88 @@
                 let match;
                 const regex = /(?:^|;|,)(?:"([^"]*)"|([^;,"]*))/g;
                 while ((match = regex.exec(rowStr)) !== null) {
-                    matches.push(match[1] !== undefined ? match[1] : match[2]);
+                    matches.push(match[1] !== undefined ? match[1] : (match[2] !== undefined ? match[2] : ''));
                 }
                 return matches;
             };
 
-            const headers = parseRow(lines[0]).map(h => h.trim());
+            const rawHeaders = parseRow(lines[0]).map(h => h.trim());
+            const headers = rawHeaders.map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+            
             const data = [];
 
             for (let i = 1; i < lines.length; i++) {
                 const cols = parseRow(lines[i]);
                 if (cols.length === 0) continue;
 
-                let rowObj = {};
+                let rowObj = {
+                    'Data e hora': '',
+                    'Telefone': '',
+                    'Nome': '',
+                    'Número do boleto': '',
+                    'Valor': 0,
+                    'Vencimento Original': '',
+                    'Obs': '',
+                    'Fluxo': '',
+                    'Regua': '',
+                    'Base': '',
+                    'Veiculo': '',
+                    'DDD': 'N/I',
+                    'Hora': 0
+                };
+
                 headers.forEach((h, idx) => {
-                    rowObj[h] = cols[idx] ? cols[idx].trim() : '';
+                    const val = cols[idx] ? cols[idx].trim() : '';
+                    if (h.includes('data') || h.includes('hora')) rowObj['Data e hora'] = val;
+                    else if (h.includes('telef') || h.includes('celular') || h.includes('whatsapp')) rowObj['Telefone'] = val;
+                    else if (h.includes('nome') || h.includes('associado') || h.includes('cliente')) rowObj['Nome'] = val;
+                    else if (h.includes('boleto') || h.includes('numero')) rowObj['Número do boleto'] = val;
+                    else if (h.includes('valor') || h.includes('preco') || h.includes('rs')) {
+                        // Limpeza robusta de moeda (ex: R$ 1.250,50 -> 1250.50)
+                        const cleanVal = val.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
+                        rowObj['Valor'] = parseFloat(cleanVal) || 0;
+                    }
+                    else if (h.includes('venc') || h.includes('data_vencimento')) rowObj['Vencimento Original'] = val;
+                    else if (h.includes('obs') || h.includes('status') || h.includes('retorno') || h.includes('mensagem')) rowObj['Obs'] = val;
+                    else if (h.includes('fluxo') || h.includes('gatilho')) rowObj['Fluxo'] = val;
+                    else if (h.includes('regua')) rowObj['Regua'] = val;
+                    else if (h.includes('base') || h.includes('carteira')) rowObj['Base'] = val;
+                    else if (h.includes('veiculo') || h.includes('plano')) rowObj['Veiculo'] = val;
                 });
 
-                // Tratamento e Normalização de Campos
-                const rawVal = String(rowObj['Valor'] || '0').replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-                const valorNum = parseFloat(rawVal) || 0;
-
-                const phoneStr = String(rowObj['Telefone'] || '').replace(/\D/g, '');
+                // Tratamento complementar de telefone, DDD, Hora e Regra
+                const phoneStr = String(rowObj['Telefone']).replace(/\D/g, '');
                 let ddd = 'N/I';
                 if (phoneStr.length >= 10) {
                     ddd = phoneStr.startsWith('55') ? phoneStr.substring(2, 4) : phoneStr.substring(0, 2);
                 }
+                rowObj['DDD'] = ddd;
 
                 let horaNum = 0;
-                const dataHora = rowObj['Data e hora'] || '';
-                if (dataHora.includes(':')) {
-                    const parts = dataHora.split(' ');
+                const dh = rowObj['Data e hora'] || '';
+                if (dh.includes(':')) {
+                    const parts = dh.split(' ');
                     const timePart = parts[parts.length - 1];
                     if (timePart) horaNum = parseInt(timePart.split(':')[0], 10) || 0;
                 }
+                rowObj['Hora'] = horaNum;
 
                 let reguaCalculada = 'No dia';
-                const fluxo = (rowObj['Fluxo'] || rowObj['Régua'] || '').toLowerCase();
-                if (fluxo.includes('2 dias') || fluxo.includes('antes')) reguaCalculada = '2 dias antes';
-                else if (fluxo.includes('5 dias') || fluxo.includes('depois') || fluxo.includes('após')) reguaCalculada = '5 dias depois';
+                const f = (rowObj['Fluxo'] || rowObj['Regua'] || '').toLowerCase();
+                if (f.includes('2 dias') || f.includes('antes')) reguaCalculada = '2 dias antes';
+                else if (f.includes('5 dias') || f.includes('depois') || f.includes('após')) reguaCalculada = '5 dias depois';
+                if (!rowObj['Regua']) rowObj['Regua'] = reguaCalculada;
 
                 let baseCalculada = 'ServCar';
-                if (fluxo.includes('taxi') || fluxo.includes('táxi')) baseCalculada = 'ServTaxi';
+                if (f.includes('taxi') || f.includes('táxi')) baseCalculada = 'ServTaxi';
+                if (!rowObj['Base']) rowObj['Base'] = baseCalculada;
 
-                let veiculoClass = 'Carro Passeio';
-                if (valorNum <= 80) veiculoClass = 'Moto';
-                else if (valorNum > 160 && valorNum <= 240) veiculoClass = 'SUV / Pick-up';
-                else if (valorNum > 240) veiculoClass = 'Utilitário / Pesado';
-
-                rowObj.Valor = valorNum;
-                rowObj.DDD = ddd;
-                rowObj.Hora = horaNum;
-                rowObj.Regua = rowObj.Regua || reguaCalculada;
-                rowObj.Base = rowObj.Base || baseCalculada;
-                rowObj.Veiculo = rowObj.Veiculo || veiculoClass;
+                let vClass = 'Carro Passeio';
+                const valNum = rowObj['Valor'];
+                if (valNum <= 80) vClass = 'Moto';
+                else if (valNum > 160 && valNum <= 240) vClass = 'SUV / Pick-up';
+                else if (valNum > 240) vClass = 'Utilitário / Pesado';
+                if (!rowObj['Veiculo']) rowObj['Veiculo'] = vClass;
 
                 data.push(rowObj);
             }
@@ -623,13 +631,12 @@
             return data;
         }
 
-        // Opções de seletores dinâmicos sem resetar seleções
         function populateFilterOptions() {
             const currentVenc = document.getElementById('filter-vencimento').value;
             const currentDDD = document.getElementById('filter-ddd').value;
 
-            const vencSet = new Set(masterData.map(r => r['Vencimento Original'] || r['Vencimento']).filter(Boolean));
-            const dddSet = new Set(masterData.map(r => r.DDD).filter(Boolean));
+            const vencSet = new Set(masterData.map(r => r['Vencimento Original']).filter(Boolean));
+            const dddSet = new Set(masterData.map(r => r.DDD).filter(d => d && d !== 'N/I'));
 
             const vencSelect = document.getElementById('filter-vencimento');
             vencSelect.innerHTML = '<option value="ALL">Todos os Vencimentos</option>';
@@ -669,9 +676,7 @@
                 if (regua !== 'ALL' && r.Regua !== regua) return false;
                 if (base !== 'ALL' && r.Base !== base) return false;
                 if (veiculo !== 'ALL' && r.Veiculo !== veiculo) return false;
-                
-                const venc = r['Vencimento Original'] || r['Vencimento'];
-                if (vencimento !== 'ALL' && venc !== vencimento) return false;
+                if (vencimento !== 'ALL' && r['Vencimento Original'] !== vencimento) return false;
                 if (ddd !== 'ALL' && r.DDD !== ddd) return false;
 
                 const val = r.Valor || 0;
@@ -688,9 +693,9 @@
                 if (turno === 'noite' && (h < 18 || h >= 23)) return false;
 
                 if (search) {
-                    const nameMatch = (r.Nome || r.Associado || '').toLowerCase().includes(search);
+                    const nameMatch = (r.Nome || '').toLowerCase().includes(search);
                     const phoneMatch = String(r.Telefone || '').includes(search);
-                    const boletoMatch = String(r['Número do boleto'] || r.Boleto || '').includes(search);
+                    const boletoMatch = String(r['Número do boleto'] || '').includes(search);
                     if (!nameMatch && !phoneMatch && !boletoMatch) return false;
                 }
 
@@ -724,7 +729,7 @@
 
             const vencFreq = {};
             filteredData.forEach(r => {
-                const v = r['Vencimento Original'] || r['Vencimento'];
+                const v = r['Vencimento Original'];
                 if (v) vencFreq[v] = (vencFreq[v] || 0) + 1;
             });
             let topVenc = '-';
@@ -738,7 +743,7 @@
 
             const dddFreq = {};
             filteredData.forEach(r => {
-                if (r.DDD) dddFreq[r.DDD] = (dddFreq[r.DDD] || 0) + 1;
+                if (r.DDD && r.DDD !== 'N/I') dddFreq[r.DDD] = (dddFreq[r.DDD] || 0) + 1;
             });
             let topDDD = '-';
             let topDDDCount = 0;
@@ -753,10 +758,9 @@
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
 
-            // 1. Vencimentos x Valor
             const vencMap = {};
             filteredData.forEach(r => {
-                const k = r['Vencimento Original'] || r['Vencimento'] || 'Outros';
+                const k = r['Vencimento Original'] || 'Outros';
                 vencMap[k] = (vencMap[k] || 0) + (r.Valor || 0);
             });
             const ctxV = document.getElementById('chartVencimentos').getContext('2d');
@@ -775,7 +779,6 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 2. Veículos
             const veicMap = {};
             filteredData.forEach(r => {
                 const k = r.Veiculo || 'Outros';
@@ -795,7 +798,6 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 3. Horários
             const horaMap = {};
             filteredData.forEach(r => {
                 const h = r.Hora !== undefined ? `${r.Hora}h` : 'N/I';
@@ -819,10 +821,9 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // 4. DDDs
             const dddMap = {};
             filteredData.forEach(r => {
-                const d = r.DDD ? `DDD ${r.DDD}` : 'N/I';
+                const d = r.DDD && r.DDD !== 'N/I' ? `DDD ${r.DDD}` : 'N/I';
                 dddMap[d] = (dddMap[d] || 0) + 1;
             });
             const ctxD = document.getElementById('chartDDDs').getContext('2d');
@@ -868,7 +869,7 @@
             pageData.forEach(r => {
                 const tr = document.createElement('tr');
                 
-                const obsText = (r.Obs || r.Status || '').toLowerCase();
+                const obsText = (r.Obs || '').toLowerCase();
                 const isEnviado = obsText.includes('enviada') || obsText.includes('sucesso') || obsText.includes('enviado');
 
                 let badgeHTML = '';
@@ -884,12 +885,12 @@
                     <td class="py-2.5 px-3.5 font-mono text-slate-400">${r['Data e hora'] || '-'}</td>
                     <td class="py-2.5 px-3.5 font-semibold text-rose-300">${r.Regua || '-'}</td>
                     <td class="py-2.5 px-3.5">${r.Base || '-'}</td>
-                    <td class="py-2.5 px-3.5 font-bold text-white">${r.Nome || r.Associado || '-'}</td>
+                    <td class="py-2.5 px-3.5 font-bold text-white">${r.Nome || '-'}</td>
                     <td class="py-2.5 px-3.5 font-mono text-slate-400">${r.Telefone || '-'}</td>
                     <td class="py-2.5 px-3.5 text-center">${r.Veiculo || '-'}</td>
-                    <td class="py-2.5 px-3.5 text-center font-mono text-emerald-400">${r['Número do boleto'] || r.Boleto || '-'}</td>
+                    <td class="py-2.5 px-3.5 text-center font-mono text-emerald-400">${r['Número do boleto'] || '-'}</td>
                     <td class="py-2.5 px-3.5 text-right font-mono font-bold text-white">${(r.Valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                    <td class="py-2.5 px-3.5 text-center font-mono text-amber-300">${r['Vencimento Original'] || r['Vencimento'] || '-'}</td>
+                    <td class="py-2.5 px-3.5 text-center font-mono text-amber-300">${r['Vencimento Original'] || '-'}</td>
                     <td class="py-2.5 px-3.5 text-center">${badgeHTML}</td>
                 `;
                 tbody.appendChild(tr);
@@ -956,13 +957,13 @@
                 `"${r['Data e hora'] || ''}"`,
                 `"${r.Regua || ''}"`,
                 `"${r.Base || ''}"`,
-                `"${r.Nome || r.Associado || ''}"`,
+                `"${r.Nome || ''}"`,
                 `"${r.Telefone || ''}"`,
                 `"${r.Veiculo || ''}"`,
-                `"${r['Número do boleto'] || r.Boleto || ''}"`,
+                `"${r['Número do boleto'] || ''}"`,
                 (r.Valor || 0).toFixed(2),
-                `"${r['Vencimento Original'] || r['Vencimento'] || ''}"`,
-                `"${r.Obs || r.Status || ''}"`
+                `"${r['Vencimento Original'] || ''}"`,
+                `"${r.Obs || ''}"`
             ]);
             const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
             const link = document.createElement('a');
