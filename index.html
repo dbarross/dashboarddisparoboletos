@@ -100,7 +100,7 @@
                     <div class="flex items-center space-x-2">
                         <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Aprovatt • Central Analítica de Automações</h1>
                         <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> SYNC ATIVO
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> SYNC MANUAL
                         </span>
                     </div>
                     <p class="text-xs text-slate-400">Régua Pré/Pós Vencimento • Multi-Filtros Dinâmicos (ServCar / ServTaxi)</p>
@@ -160,15 +160,15 @@
                         <span>Limpar Filtros</span>
                     </button>
                     <span id="filtered-records-badge" class="text-xs px-2.5 py-1.5 rounded-lg bg-emerald-950/50 text-emerald-300 font-semibold border border-emerald-500/30">
-                        176 / 176 registros
+                        0 / 0 registros
                     </span>
                 </div>
             </div>
 
-            <!-- Grid de Filtros (7 Dimensões) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
+            <!-- Grid de Filtros (8 Dimensões) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 text-xs">
                 
-                <!-- 1. Filtro: Momento da Régua (NOVO) -->
+                <!-- 1. Filtro: Momento da Régua -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="timer" class="w-3.5 h-3.5 text-rose-400"></i> Régua / Gatilho
@@ -193,7 +193,19 @@
                     </select>
                 </div>
 
-                <!-- 3. Filtro: Tipo de Veículo -->
+                <!-- 3. Filtro: Status Envio -->
+                <div class="space-y-1.5">
+                    <label class="font-semibold text-slate-300 flex items-center gap-1.5">
+                        <i data-lucide="send-horizontal" class="w-3.5 h-3.5 text-emerald-400"></i> Status Envio
+                    </label>
+                    <select id="filter-status-envio" onchange="applyAllFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
+                        <option value="ALL">Todos os Status</option>
+                        <option value="ENVIADOS">Mensagens Enviadas</option>
+                        <option value="ERROS">Erros / Não Enviadas</option>
+                    </select>
+                </div>
+
+                <!-- 4. Filtro: Tipo de Veículo -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="car" class="w-3.5 h-3.5 text-cyan-400"></i> Tipo de Veículo
@@ -207,7 +219,7 @@
                     </select>
                 </div>
 
-                <!-- 4. Filtro: Data de Vencimento -->
+                <!-- 5. Filtro: Data de Vencimento -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> Vencimento
@@ -217,7 +229,7 @@
                     </select>
                 </div>
 
-                <!-- 5. Filtro: Faixa de Valor (R$) -->
+                <!-- 6. Filtro: Faixa de Valor (R$) -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="badge-dollar-sign" class="w-3.5 h-3.5 text-emerald-400"></i> Faixa de Valor
@@ -231,7 +243,7 @@
                     </select>
                 </div>
 
-                <!-- 6. Filtro: Região / DDD -->
+                <!-- 7. Filtro: Região / DDD -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-purple-400"></i> Região / DDD
@@ -241,7 +253,7 @@
                     </select>
                 </div>
 
-                <!-- 7. Filtro: Turno do Disparo -->
+                <!-- 8. Filtro: Turno do Disparo -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="clock" class="w-3.5 h-3.5 text-pink-400"></i> Turno Disparo
@@ -472,10 +484,10 @@
 
             <!-- Paginação -->
             <div class="flex flex-col sm:flex-row justify-between items-center mt-4 gap-3 text-xs text-slate-400 no-print">
-                <div id="table-pagination-info">Mostrando 1 a 10 de 176 registros</div>
+                <div id="table-pagination-info">Mostrando 0 a 0 de 0 registros</div>
                 <div class="flex items-center space-x-2">
                     <button onclick="navigatePage(-1)" id="btn-prev" class="px-3 py-1.5 bg-slate-850 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-slate-700 text-white transition">Anterior</button>
-                    <span id="page-indicator" class="px-3 py-1.5 bg-slate-900 rounded-lg text-emerald-400 font-mono font-semibold border border-slate-800">1 / 18</span>
+                    <span id="page-indicator" class="px-3 py-1.5 bg-slate-900 rounded-lg text-emerald-400 font-mono font-semibold border border-slate-800">1 / 1</span>
                     <button onclick="navigatePage(1)" id="btn-next" class="px-3 py-1.5 bg-slate-850 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-slate-700 text-white transition">Próximo</button>
                 </div>
             </div>
@@ -510,16 +522,6 @@
         let chartVeic = null;
         let chartHora = null;
         let chartDDD = null;
-
-        // Contador de Sincronização
-        let countdown = 30;
-        setInterval(() => {
-            countdown--;
-            if (countdown <= 0) {
-                countdown = 30;
-                fetchSheetData(false);
-            }
-        }, 1000);
 
         // Mapeia a aba correta da planilha Google Sheets conforme Base + Régua
         function getTargetSheetName(base, regua) {
@@ -614,9 +616,11 @@
         function populateDynamicDropdowns() {
             const vencSelect = document.getElementById('filter-vencimento');
             const dddSelect = document.getElementById('filter-ddd');
+            const statusSelect = document.getElementById('filter-status-envio');
 
             const currentVenc = vencSelect.value;
             const currentDDD = dddSelect.value;
+            const currentStatus = statusSelect ? statusSelect.value : 'ALL';
 
             // Vencimentos
             const vencs = Array.from(new Set(masterData.map(r => r['Vencimento Original']))).filter(Boolean).sort();
@@ -628,9 +632,6 @@
                 if (v === currentVenc) opt.selected = true;
                 vencSelect.appendChild(opt);
             });
-            if (currentVenc && vencs.includes(currentVenc)) {
-                vencSelect.value = currentVenc;
-            }
 
             // DDDs
             const ddds = Array.from(new Set(masterData.map(r => r.DDD))).filter(Boolean).sort();
@@ -642,8 +643,22 @@
                 if (d === currentDDD) opt.selected = true;
                 dddSelect.appendChild(opt);
             });
-            if (currentDDD && ddds.includes(currentDDD)) {
-                dddSelect.value = currentDDD;
+
+            // Opções adicionais dinâmicas de status se existirem status específicos
+            if (statusSelect) {
+                const rawStatuses = Array.from(new Set(masterData.map(r => (r.Obs || 'Enviado').trim()))).filter(Boolean);
+                statusSelect.innerHTML = `
+                    <option value="ALL">Todos os Status</option>
+                    <option value="ENVIADOS">Mensagens Enviadas</option>
+                    <option value="ERROS">Erros / Não Enviadas</option>
+                `;
+                rawStatuses.forEach(st => {
+                    const opt = document.createElement('option');
+                    opt.value = st;
+                    opt.innerText = st;
+                    statusSelect.appendChild(opt);
+                });
+                statusSelect.value = currentStatus;
             }
         }
 
@@ -651,6 +666,7 @@
         function applyAllFilters() {
             const filterRegua = document.getElementById('filter-regua').value;
             const filterBase = document.getElementById('filter-base').value;
+            const filterStatus = document.getElementById('filter-status-envio') ? document.getElementById('filter-status-envio').value : 'ALL';
             const filterVeic = document.getElementById('filter-veiculo').value;
             const filterVenc = document.getElementById('filter-vencimento').value;
             const filterFaixa = document.getElementById('filter-faixa-valor').value;
@@ -679,36 +695,43 @@
                 // 2. Base
                 if (filterBase !== 'ALL' && row.Base !== filterBase) return false;
 
-                // 3. Veículo
+                // 3. Status Envio
+                const obsText = (row.Obs || 'Enviado').trim();
+                const isNotSent = /não|nao|erro|falha|pendente|bloquead/i.test(obsText);
+                if (filterStatus === 'ENVIADOS' && isNotSent) return false;
+                if (filterStatus === 'ERROS' && !isNotSent) return false;
+                if (filterStatus !== 'ALL' && filterStatus !== 'ENVIADOS' && filterStatus !== 'ERROS' && obsText !== filterStatus) return false;
+
+                // 4. Veículo
                 if (filterVeic !== 'ALL' && row.Veiculo !== filterVeic) return false;
 
-                // 4. Vencimento
+                // 5. Vencimento
                 if (filterVenc !== 'ALL' && row['Vencimento Original'] !== filterVenc) return false;
 
-                // 5. Faixa Valor
+                // 6. Faixa Valor
                 if (filterFaixa === 'f1' && !(row.Valor <= 80)) return false;
                 if (filterFaixa === 'f2' && !(row.Valor > 80 && row.Valor <= 140)) return false;
                 if (filterFaixa === 'f3' && !(row.Valor > 140 && row.Valor <= 200)) return false;
                 if (filterFaixa === 'f4' && !(row.Valor > 200)) return false;
 
-                // 6. Min / Max
+                // 7. Min / Max
                 if (row.Valor < valMin || row.Valor > valMax) return false;
 
-                // 7. DDD
+                // 8. DDD
                 if (filterDDD !== 'ALL' && row.DDD !== filterDDD) return false;
 
-                // 8. Turno
+                // 9. Turno
                 if (filterTurno === 'manha' && !(row.Hora >= 6 && row.Hora < 12)) return false;
                 if (filterTurno === 'tarde' && !(row.Hora >= 12 && row.Hora < 18)) return false;
                 if (filterTurno === 'noite' && !(row.Hora >= 18 && row.Hora <= 23)) return false;
 
-                // 9. Período de Envio
+                // 10. Período de Envio
                 if (startDate && endDate && row['Data e hora']) {
                     const rowD = parseRowDate(row['Data e hora']);
                     if (rowD && (rowD < startDate || rowD > endDate)) return false;
                 }
 
-                // 10. Busca Global
+                // 11. Busca Global
                 if (query) {
                     const matchName = row.Nome && row.Nome.toLowerCase().includes(query);
                     const matchPhone = row.Telefone && String(row.Telefone).includes(query);
@@ -1023,7 +1046,6 @@
                     if (r.Regua === 'No dia') badgeRegua = 'bg-amber-500/10 text-amber-300 border-amber-500/20';
                     else if (r.Regua === '5 dias depois') badgeRegua = 'bg-purple-500/10 text-purple-300 border-purple-500/20';
 
-                    // Estilização diferenciada para mensagens enviadas vs não enviadas (erros/falhas)
                     const obsText = (r.Obs || 'Enviado').trim();
                     const isNotSent = /não|nao|erro|falha|pendente|bloquead/i.test(obsText);
                     
@@ -1076,6 +1098,7 @@
         function resetAllFilters() {
             document.getElementById('filter-regua').value = 'ALL';
             document.getElementById('filter-base').value = 'ALL';
+            if (document.getElementById('filter-status-envio')) document.getElementById('filter-status-envio').value = 'ALL';
             document.getElementById('filter-veiculo').value = 'ALL';
             document.getElementById('filter-vencimento').value = 'ALL';
             document.getElementById('filter-faixa-valor').value = 'ALL';
