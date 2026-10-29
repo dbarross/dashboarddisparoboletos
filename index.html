@@ -539,104 +539,104 @@
             fetchSheetData(false);
         }
 
-        // Função de Leitura Tolerante da API do Google Sheets
-        async function fetchSheetData(manual = false) {
-            const icon = document.getElementById('refresh-icon');
-            if (icon) icon.classList.add('animate-spin');
+        // Função de Leitura Tolerante e Completa da API do Google Sheets (Sem limite de linhas)
+async function fetchSheetData(manual = false) {
+    const icon = document.getElementById('refresh-icon');
+    if (icon) icon.classList.add('animate-spin');
 
-            const baseSelect = document.getElementById('filter-base') ? document.getElementById('filter-base').value : 'ServCar';
-            const reguaSelect = document.getElementById('filter-regua') ? document.getElementById('filter-regua').value : '2 dias antes';
-            
-            const sheetToFetch = getTargetSheetName(baseSelect, reguaSelect);
-            
-            // Tenta consultar a aba específica; se falhar, consulta sem especificar aba (primeira página)
-            const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetToFetch)}&t=${new Date().getTime()}`;
-            const fallbackUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${new Date().getTime()}`;
+    const baseSelect = document.getElementById('filter-base') ? document.getElementById('filter-base').value : 'ServCar';
+    const reguaSelect = document.getElementById('filter-regua') ? document.getElementById('filter-regua').value : '2 dias antes';
+    
+    const sheetToFetch = getTargetSheetName(baseSelect, reguaSelect);
+    
+    // Adicionado LIMIT 10000 para forçar a API a trazer todas as linhas da planilha sem corte
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetToFetch)}&tq=SELECT%20*%20LIMIT%2010000&t=${new Date().getTime()}`;
+    const fallbackUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq=SELECT%20*%20LIMIT%2010000&t=${new Date().getTime()}`;
 
-            let responseOk = false;
-            let rowsParsed = [];
+    let responseOk = false;
+    let rowsParsed = [];
 
-            try {
-                let response = await fetch(gvizUrl);
-                if (!response.ok) response = await fetch(fallbackUrl);
+    try {
+        let response = await fetch(gvizUrl);
+        if (!response.ok) response = await fetch(fallbackUrl);
 
-                if (response.ok) {
-                    const text = await response.text();
-                    const match = text.match(/google\.visualization\.Query\.setResponse\((.+)\);/s);
-                    if (match && match[1]) {
-                        const data = JSON.parse(match[1]);
-                        if (data.table && data.table.rows && data.table.rows.length > 0) {
-                            rowsParsed = data.table.rows.map(r => {
-                                const c = r.c;
-                                if (!c) return null;
+        if (response.ok) {
+            const text = await response.text();
+            const match = text.match(/google\.visualization\.Query\.setResponse\((.+)\);/s);
+            if (match && match[1]) {
+                const data = JSON.parse(match[1]);
+                if (data.table && data.table.rows && data.table.rows.length > 0) {
+                    rowsParsed = data.table.rows.map(r => {
+                        const c = r.c;
+                        if (!c || c.every(cell => !cell || cell.v === null)) return null; // Ignora linhas totalmente vazias
 
-                                // Leitura segura de valor do boleto
-                                let rawVal = c[4] ? (c[4].v !== undefined ? c[4].v : c[4].f) : 0;
-                                if (typeof rawVal === 'string') {
-                                    rawVal = rawVal.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-                                }
-                                const valBoleto = parseFloat(rawVal) || 0;
-
-                                // Telefone e DDD
-                                const phone = c[1] ? String(c[1].v || c[1].f || '').trim() : '';
-                                const ddd = phone.length >= 4 ? phone.substring(2, 4) : '75';
-
-                                // Data e Hora
-                                const dataHora = c[0] ? String(c[0].f || c[0].v || '') : '';
-                                let hora = 12;
-                                if (dataHora.includes(':')) {
-                                    const parts = dataHora.split(' ');
-                                    if (parts.length > 1) hora = parseInt(parts[1].split(':')[0]) || 12;
-                                }
-
-                                // Classificação de Veículo
-                                let veiculo = 'Carro Passeio';
-                                if (valBoleto <= 80) veiculo = 'Moto';
-                                else if (valBoleto <= 160) veiculo = 'Carro Passeio';
-                                else if (valBoleto <= 240) veiculo = 'SUV / Pick-up';
-                                else veiculo = 'Utilitário / Pesado';
-
-                                const nome = c[2] ? String(c[2].v || c[2].f || '') : '';
-                                const boletoNum = c[3] ? String(c[3].v || c[3].f || '-') : '-';
-                                const venc = c[5] ? String(c[5].f || c[5].v || '-') : '-';
-                                const obs = c[6] ? String(c[6].v || c[6].f || 'Mensagem enviada') : 'Mensagem enviada';
-                                const fluxo = c[7] ? String(c[7].v || c[7].f || '-') : '-';
-
-                                return {
-                                    'Data e hora': dataHora,
-                                    'Telefone': phone,
-                                    'Nome': nome,
-                                    'Número do boleto': boletoNum,
-                                    'Valor': valBoleto,
-                                    'Vencimento Original': venc,
-                                    'Obs': obs,
-                                    'Fluxo': fluxo,
-                                    'DDD': ddd,
-                                    'Hora': hora,
-                                    'Base': baseSelect === 'ServTaxi' ? 'ServTaxi' : 'ServCar',
-                                    'Veiculo': veiculo,
-                                    'Regua': reguaSelect === 'ALL' ? '2 dias antes' : reguaSelect
-                                };
-                            }).filter(r => r && r.Nome && r.Nome.toLowerCase() !== 'teste' && r.Nome.toLowerCase() !== 'nome');
-
-                            if (rowsParsed.length > 0) {
-                                masterData = rowsParsed;
-                                responseOk = true;
-                            }
+                        // Leitura segura de valor do boleto
+                        let rawVal = c[4] ? (c[4].v !== undefined ? c[4].v : c[4].f) : 0;
+                        if (typeof rawVal === 'string') {
+                            rawVal = rawVal.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
                         }
+                        const valBoleto = parseFloat(rawVal) || 0;
+
+                        // Telefone e DDD
+                        const phone = c[1] ? String(c[1].v || c[1].f || '').trim() : '';
+                        const ddd = phone.length >= 4 ? phone.substring(2, 4) : '75';
+
+                        // Data e Hora
+                        const dataHora = c[0] ? String(c[0].f || c[0].v || '') : '';
+                        let hora = 12;
+                        if (dataHora.includes(':')) {
+                            const parts = dataHora.split(' ');
+                            if (parts.length > 1) hora = parseInt(parts[1].split(':')[0]) || 12;
+                        }
+
+                        // Classificação de Veículo
+                        let veiculo = 'Carro Passeio';
+                        if (valBoleto <= 80) veiculo = 'Moto';
+                        else if (valBoleto <= 160) veiculo = 'Carro Passeio';
+                        else if (valBoleto <= 240) veiculo = 'SUV / Pick-up';
+                        else veiculo = 'Utilitário / Pesado';
+
+                        const nome = c[2] ? String(c[2].v || c[2].f || '') : '';
+                        const boletoNum = c[3] ? String(c[3].v || c[3].f || '-') : '-';
+                        const venc = c[5] ? String(c[5].f || c[5].v || '-') : '-';
+                        const obs = c[6] ? String(c[6].v || c[6].f || 'Mensagem enviada') : 'Mensagem enviada';
+                        const fluxo = c[7] ? String(c[7].v || c[7].f || '-') : '-';
+
+                        return {
+                            'Data e hora': dataHora,
+                            'Telefone': phone,
+                            'Nome': nome,
+                            'Número do boleto': boletoNum,
+                            'Valor': valBoleto,
+                            'Vencimento Original': venc,
+                            'Obs': obs,
+                            'Fluxo': fluxo,
+                            'DDD': ddd,
+                            'Hora': hora,
+                            'Base': baseSelect === 'ServTaxi' ? 'ServTaxi' : 'ServCar',
+                            'Veiculo': veiculo,
+                            'Regua': reguaSelect === 'ALL' ? '2 dias antes' : reguaSelect
+                        };
+                    }).filter(r => r && r.Nome && r.Nome.toLowerCase() !== 'teste' && r.Nome.toLowerCase() !== 'nome');
+
+                    if (rowsParsed.length > 0) {
+                        masterData = rowsParsed;
+                        responseOk = true;
                     }
                 }
-            } catch (err) {
-                console.warn('Conexão Google Sheets via API retornou dados offline/cache:', err);
             }
-
-            const now = new Date();
-            document.getElementById('last-sync-time').innerText = now.toLocaleTimeString('pt-BR') + (responseOk ? ' (Online)' : ' (Cache)');
-            if (icon) icon.classList.remove('animate-spin');
-
-            populateDynamicDropdowns();
-            applyAllFilters();
         }
+    } catch (err) {
+        console.warn('Conexão Google Sheets via API retornou dados offline/cache:', err);
+    }
+
+    const now = new Date();
+    document.getElementById('last-sync-time').innerText = now.toLocaleTimeString('pt-BR') + (responseOk ? ' (Online)' : ' (Cache)');
+    if (icon) icon.classList.remove('animate-spin');
+
+    populateDynamicDropdowns();
+    applyAllFilters();
+}
 
         // Popula Dropdowns Dinâmicos preservando seleções ativas do usuário
         function populateDynamicDropdowns() {
