@@ -61,15 +61,6 @@
         .glass-panel:hover {
             border-color: rgba(16, 185, 129, 0.25);
         }
-        .pulse-live {
-            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0b1329; }
         ::-webkit-scrollbar-thumb { background: #26354f; border-radius: 4px; }
@@ -98,7 +89,7 @@
                     <div class="flex items-center space-x-2">
                         <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Aprovatt • Central Analítica de Automações</h1>
                         <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> BLINDADO CONTRA RESET
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> CONTROLE MANUAL ESTÁVEL
                         </span>
                     </div>
                     <p class="text-xs text-slate-400">Régua Pré/Pós Vencimento • Multi-Filtros Dinâmicos (ServCar / ServTaxi)</p>
@@ -478,14 +469,13 @@
     <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500 no-print">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div>Aprovatt • Gestão de Automação & Indicadores Financeiros</div>
-            <div class="text-slate-400">Conexão Google Sheets API • Auto-Sync Blindado</div>
+            <div class="text-slate-400">Conexão Google Sheets API • Controle Estável de Filtros</div>
         </div>
     </footer>
 
     <!-- LOGICA JS -->
     <script>
         const SHEET_ID = '1gHSotrzUANYZRGh22fvmydZ9wZ28fSvVHEQHskd85t4';
-        const AUTO_SYNC_INTERVAL_MS = 60000; // 60 segundos
 
         let masterData = [];
         let activeFilteredData = [];
@@ -494,7 +484,6 @@
         let sortColumn = 'Data e hora';
         let sortAsc = false;
         let dateRangePicker = null;
-        let autoSyncTimer = null;
 
         let chartVenc = null;
         let chartVeic = null;
@@ -513,7 +502,7 @@
         }
 
         function handleReguaOrBaseChange() {
-            fetchSheetData(true); // Chamada explícita por mudança de base/régua
+            fetchSheetData(true);
         }
 
         async function fetchSheetData(manual = false) {
@@ -609,12 +598,11 @@
             document.getElementById('last-sync-time').innerText = now.toLocaleTimeString('pt-BR') + (responseOk ? ' (Online)' : ' (Cache)');
             if (icon) icon.classList.remove('animate-spin');
 
-            // Preserva as seleções atuais de dropdowns do usuário ao popular
-            populateDynamicDropdowns();
+            populateDynamicDropdownsOnce();
             applyAllFilters();
         }
 
-        function populateDynamicDropdowns() {
+        function populateDynamicDropdownsOnce() {
             const vencSelect = document.getElementById('filter-vencimento');
             const dddSelect = document.getElementById('filter-ddd');
             const statusSelect = document.getElementById('filter-status-envio');
@@ -632,6 +620,7 @@
                 if (v === currentVenc) opt.selected = true;
                 vencSelect.appendChild(opt);
             });
+            vencSelect.value = currentVenc;
 
             const ddds = Array.from(new Set(masterData.map(r => r.DDD))).filter(Boolean).sort();
             dddSelect.innerHTML = '<option value="ALL">Todos os DDDs</option>';
@@ -642,6 +631,7 @@
                 if (d === currentDDD) opt.selected = true;
                 dddSelect.appendChild(opt);
             });
+            dddSelect.value = currentDDD;
 
             if (statusSelect) {
                 const rawStatuses = Array.from(new Set(masterData.map(r => (r.Obs || 'Enviado').trim()))).filter(Boolean);
@@ -1184,72 +1174,8 @@
                 }
             });
 
-            // Carga inicial
+            // Carregamento inicial único (sem redefinições automáticas indesejadas)
             fetchSheetData(false);
-
-            // Auto-sync suave em segundo plano (nunca redefine dropdowns ou datas selecionadas)
-            autoSyncTimer = setInterval(() => {
-                const icon = document.getElementById('refresh-icon');
-                if (icon) icon.classList.add('animate-spin');
-
-                const baseSelect = document.getElementById('filter-base').value;
-                const reguaSelect = document.getElementById('filter-regua').value;
-                const sheetToFetch = getTargetSheetName(baseSelect, reguaSelect);
-                const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetToFetch)}&tq=SELECT%20*%20LIMIT%2010000&t=${new Date().getTime()}`;
-
-                fetch(gvizUrl).then(res => res.text()).then(text => {
-                    const match = text.match(/google\.visualization\.Query\.setResponse\((.+)\);/s);
-                    if (match && match[1]) {
-                        const data = JSON.parse(match[1]);
-                        if (data.table && data.table.rows && data.table.rows.length > 0) {
-                            const parsed = data.table.rows.map(r => {
-                                const c = r.c;
-                                if (!c || c.every(cell => !cell || cell.v === null)) return null;
-                                let rawVal = c[4] ? (c[4].v !== undefined ? c[4].v : c[4].f) : 0;
-                                if (typeof rawVal === 'string') rawVal = rawVal.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-                                let valBoleto = parseFloat(rawVal) || 0;
-                                if (valBoleto > 1000 && !String(rawVal).includes('.')) valBoleto = valBoleto / 100;
-                                const phone = c[1] ? String(c[1].v || c[1].f || '').trim() : '';
-                                const ddd = phone.length >= 4 ? phone.substring(2, 4) : '75';
-                                const dataHora = c[0] ? String(c[0].f || c[0].v || '') : '';
-                                let hora = 12;
-                                if (dataHora.includes(':')) {
-                                    const parts = dataHora.split(' ');
-                                    if (parts.length > 1) hora = parseInt(parts[1].split(':')[0]) || 12;
-                                }
-                                const nome = c[2] ? String(c[2].v || c[2].f || '') : '';
-                                const boletoNum = c[3] ? String(c[3].v || c[3].f || '-') : '-';
-                                const venc = c[5] ? String(c[5].f || c[5].v || '-') : '20/07/2026';
-                                const obs = c[6] ? String(c[6].v || c[6].f || 'Mensagem enviada') : 'Mensagem enviada';
-                                const fluxo = c[7] ? String(c[7].v || c[7].f || '-') : '-';
-
-                                let veiculo = 'Carro Passeio';
-                                if (valBoleto <= 80) veiculo = 'Moto';
-                                else if (valBoleto <= 160) veiculo = 'Carro Passeio';
-                                else if (valBoleto <= 240) veiculo = 'SUV / Pick-up';
-                                else veiculo = 'Utilitário / Pesado';
-
-                                return {
-                                    'Data e hora': dataHora, 'Telefone': phone, 'Nome': nome,
-                                    'Número do boleto': boletoNum, 'Valor': valBoleto,
-                                    'Vencimento Original': venc, 'Obs': obs, 'Fluxo': fluxo,
-                                    'DDD': ddd, 'Hora': hora, 'Base': baseSelect === 'ServTaxi' ? 'ServTaxi' : 'ServCar',
-                                    'Veiculo': veiculo, 'Regua': reguaSelect
-                                };
-                            }).filter(r => r && r.Nome && r.Nome.toLowerCase() !== 'teste' && r.Nome.toLowerCase() !== 'nome');
-
-                            if (parsed.length > 0) {
-                                masterData = parsed;
-                                applyAllFilters(); // Atualiza apenas os cálculos e a tabela mantendo seu filtro por dia/data
-                            }
-                        }
-                    }
-                    if (icon) icon.classList.remove('animate-spin');
-                    document.getElementById('last-sync-time').innerText = new Date().toLocaleTimeString('pt-BR') + ' (Auto-Sync)';
-                }).catch(() => {
-                    if (icon) icon.classList.remove('animate-spin');
-                });
-            }, AUTO_SYNC_INTERVAL_MS);
         });
     </script>
 </body>
