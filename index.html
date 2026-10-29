@@ -98,7 +98,7 @@
                     <div class="flex items-center space-x-2">
                         <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Aprovatt • Central Analítica de Automações</h1>
                         <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> ESTÁVEL & SEGURO
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> BLINDADO CONTRA RESET
                         </span>
                     </div>
                     <p class="text-xs text-slate-400">Régua Pré/Pós Vencimento • Multi-Filtros Dinâmicos (ServCar / ServTaxi)</p>
@@ -416,7 +416,7 @@
             </div>
         </section>
 
-        <!-- TABELA ANALÍTICA SEM A COLUNA DE PLACAS -->
+        <!-- TABELA ANALÍTICA -->
         <section class="glass-panel rounded-2xl p-5">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                 <div>
@@ -478,7 +478,7 @@
     <footer class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500 no-print">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div>Aprovatt • Gestão de Automação & Indicadores Financeiros</div>
-            <div class="text-slate-400">Conexão Google Sheets API • Atualização Automática Estável</div>
+            <div class="text-slate-400">Conexão Google Sheets API • Auto-Sync Blindado</div>
         </div>
     </footer>
 
@@ -513,7 +513,7 @@
         }
 
         function handleReguaOrBaseChange() {
-            fetchSheetData(false);
+            fetchSheetData(true); // Chamada explícita por mudança de base/régua
         }
 
         async function fetchSheetData(manual = false) {
@@ -609,6 +609,8 @@
             document.getElementById('last-sync-time').innerText = now.toLocaleTimeString('pt-BR') + (responseOk ? ' (Online)' : ' (Cache)');
             if (icon) icon.classList.remove('animate-spin');
 
+            // Preserva as seleções atuais de dropdowns do usuário ao popular
+            populateDynamicDropdowns();
             applyAllFilters();
         }
 
@@ -1077,8 +1079,8 @@
         }
 
         function resetAllFilters() {
-            document.getElementById('filter-regua').value = 'ALL';
-            document.getElementById('filter-base').value = 'ALL';
+            document.getElementById('filter-regua').value = '2 dias antes';
+            document.getElementById('filter-base').value = 'ServCar';
             if (document.getElementById('filter-status-envio')) document.getElementById('filter-status-envio').value = 'ALL';
             document.getElementById('filter-veiculo').value = 'ALL';
             document.getElementById('filter-vencimento').value = 'ALL';
@@ -1089,7 +1091,7 @@
             document.getElementById('filter-val-max').value = '';
             document.getElementById('search-global').value = '';
             if (dateRangePicker) dateRangePicker.clear();
-            applyAllFilters();
+            fetchSheetData(true);
         }
 
         function generateExecutivePDF() {
@@ -1183,12 +1185,9 @@
             });
 
             // Carga inicial
-            fetchSheetData(false).then(() => {
-                populateDynamicDropdowns();
-                applyAllFilters();
-            });
+            fetchSheetData(false);
 
-            // Auto-sync suave em segundo plano que NÃO altera seleções de filtro vigentes
+            // Auto-sync suave em segundo plano (nunca redefine dropdowns ou datas selecionadas)
             autoSyncTimer = setInterval(() => {
                 const icon = document.getElementById('refresh-icon');
                 if (icon) icon.classList.add('animate-spin');
@@ -1241,7 +1240,7 @@
 
                             if (parsed.length > 0) {
                                 masterData = parsed;
-                                applyAllFilters(); // Atualiza painel sem resetar os inputs do usuário
+                                applyAllFilters(); // Atualiza apenas os cálculos e a tabela mantendo seu filtro por dia/data
                             }
                         }
                     }
