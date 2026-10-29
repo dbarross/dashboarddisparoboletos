@@ -117,6 +117,7 @@
                     <span>Sincronizar</span>
                 </button>
 
+                <!-- BOTÃO PRINCIPAL: GERAR RELATÓRIO EXECUTIVO EM PDF -->
                 <button onclick="generateExecutivePDF()" id="btn-pdf" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3.5 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/30 transition duration-200">
                     <i data-lucide="file-down" class="w-4 h-4 text-white"></i>
                     <span>Relatório PDF</span>
@@ -165,6 +166,7 @@
             <!-- Grid de Filtros (7 Dimensões) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
                 
+                <!-- 1. Filtro: Momento da Régua -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="timer" class="w-3.5 h-3.5 text-rose-400"></i> Régua / Gatilho
@@ -177,6 +179,7 @@
                     </select>
                 </div>
 
+                <!-- 2. Filtro: Base Operacional -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="database" class="w-3.5 h-3.5 text-emerald-400"></i> Base / Carteira
@@ -188,6 +191,7 @@
                     </select>
                 </div>
 
+                <!-- 3. Filtro: Tipo de Veículo -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="car" class="w-3.5 h-3.5 text-cyan-400"></i> Tipo de Veículo
@@ -201,6 +205,7 @@
                     </select>
                 </div>
 
+                <!-- 4. Filtro: Data de Vencimento -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> Vencimento
@@ -210,6 +215,7 @@
                     </select>
                 </div>
 
+                <!-- 5. Filtro: Faixa de Valor (R$) -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="badge-dollar-sign" class="w-3.5 h-3.5 text-emerald-400"></i> Faixa de Valor
@@ -223,6 +229,7 @@
                     </select>
                 </div>
 
+                <!-- 6. Filtro: Região / DDD -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-purple-400"></i> Região / DDD
@@ -232,6 +239,7 @@
                     </select>
                 </div>
 
+                <!-- 7. Filtro: Turno do Disparo -->
                 <div class="space-y-1.5">
                     <label class="font-semibold text-slate-300 flex items-center gap-1.5">
                         <i data-lucide="clock" class="w-3.5 h-3.5 text-pink-400"></i> Turno Disparo
@@ -246,8 +254,9 @@
 
             </div>
 
-            <!-- Segunda linha de filtros -->
+            <!-- Segunda linha de filtros: Intervalo de Datas e Busca Global -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 pt-3 border-t border-slate-800/60 text-xs">
+                <!-- Data de Envio (Intervalo) -->
                 <div class="flex items-center gap-2">
                     <label class="font-semibold text-slate-300 whitespace-nowrap flex items-center gap-1">
                         <i data-lucide="calendar-range" class="w-3.5 h-3.5 text-indigo-400"></i> Período Envio:
@@ -255,6 +264,7 @@
                     <input type="text" id="filter-data-range" placeholder="Selecione o intervalo..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-mono">
                 </div>
 
+                <!-- Faixa Customizada Min/Max -->
                 <div class="flex items-center gap-2">
                     <label class="font-semibold text-slate-300 whitespace-nowrap">Valor R$ Min/Max:</label>
                     <input type="number" id="filter-val-min" oninput="applyAllFilters()" placeholder="Min" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-mono">
@@ -262,6 +272,7 @@
                     <input type="number" id="filter-val-max" oninput="applyAllFilters()" placeholder="Max" class="w-1/2 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 text-xs font-mono">
                 </div>
 
+                <!-- Busca Textual Global -->
                 <div class="relative">
                     <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400"></i>
                     <input type="text" id="search-global" oninput="applyAllFilters()" placeholder="Pesquisar por Associado, Boleto, Telefone..." class="w-full pl-9 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-xs">
@@ -474,7 +485,7 @@
         </div>
     </footer>
 
-    <!-- LÓGICA JS COM CORREÇÃO ROBUSTA DE LEITURA DE COLUNAS E VALORES -->
+    <!-- LÓGICA JS ORIGINAIS PRESERVADAS + CORREÇÃO ROBUSTA DA PLANILHA E FILTROS -->
     <script>
         const SHEET_ID = '1gHSotrzUANYZRGh22fvmydZ9wZ28fSvVHEQHskd85t4';
 
@@ -495,6 +506,7 @@
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
 
+            // Salvar estado atual dos filtros para preservar na sincronização
             const savedRegua = document.getElementById('filter-regua').value;
             const savedBase = document.getElementById('filter-base').value;
             const savedVeic = document.getElementById('filter-veiculo').value;
@@ -512,6 +524,7 @@
                 masterData = parseCSVData(csvText);
                 populateFilterOptions();
 
+                // Restaurar filtros salvos
                 document.getElementById('filter-regua').value = savedRegua || 'ALL';
                 document.getElementById('filter-base').value = savedBase || 'ALL';
                 document.getElementById('filter-veiculo').value = savedVeic || 'ALL';
@@ -532,7 +545,6 @@
             }
         }
 
-        // Conversor CSV blindado para mapear corretamente independentemente de maiúsculas/minúsculas ou acentos
         function parseCSVData(csv) {
             const lines = csv.split('\n').filter(l => l.trim() !== '');
             if (lines.length < 2) return [];
@@ -579,7 +591,6 @@
                     else if (h.includes('nome') || h.includes('associado') || h.includes('cliente')) rowObj['Nome'] = val;
                     else if (h.includes('boleto') || h.includes('numero')) rowObj['Número do boleto'] = val;
                     else if (h.includes('valor') || h.includes('preco') || h.includes('rs')) {
-                        // Limpeza robusta de moeda (ex: R$ 1.250,50 -> 1250.50)
                         const cleanVal = val.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
                         rowObj['Valor'] = parseFloat(cleanVal) || 0;
                     }
@@ -591,7 +602,6 @@
                     else if (h.includes('veiculo') || h.includes('plano')) rowObj['Veiculo'] = val;
                 });
 
-                // Tratamento complementar de telefone, DDD, Hora e Regra
                 const phoneStr = String(rowObj['Telefone']).replace(/\D/g, '');
                 let ddd = 'N/I';
                 if (phoneStr.length >= 10) {
@@ -843,6 +853,7 @@
             });
         }
 
+        // Tabela com destaque de cor diferenciado para mensagens não enviadas
         function renderTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
